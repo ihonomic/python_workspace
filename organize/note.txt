@@ -1,0 +1,13 @@
+ORGANIZATION OF FILES 
+
+Shutil module - Helps in file organization of files 
+1. shutil.copy('file_path', 'new_path') - Copy files 
+2. shutil.copytree('folder_path', 'new_path') - Copy files and folders
+3. shutil.move('file_path', 'new_path') - Move files 
+
+// DELETE
+4. os.unlink(path) - Delete file 
+5. os.rmdir(path) - Delete folder (DIR MUST BE EMPTY)
+6. shutil.rmtree(path) - Delete folder and contents PERMANENTLY, Use thrid library like 'send2trash' instead 
+    - send2trash.send2trash()
+// WALKING THROUGH - Renaming 

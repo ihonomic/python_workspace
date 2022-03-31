@@ -1,0 +1,55 @@
+-   https://www.regular-expressions.info/python.html
+-   Escaped characters \b \n \t when passed to re.compile, they no longer exist because they are first convert to strings, 
+    double the backslash or use a raw string r''
+
+ASSIGNMENT 
+
+How many words in the dictionary contain "a" (not necessarily the first letter) followed by 3-5 characters, then "b" followed by 3-5 characters, then "c"?
+What is the last word in the dictionary that contains "ee" and also "oo", in that order, but not necessarily adjacent?
+How many words in the dictionary contain either "aeu" or "au", then followed by "s"?
+
+1. re.compile(r'a.{3,5}b.{3,5}c')
+2. re.compile(r'ee.*oo')
+3. re.compile(r'ae?us')
+
+Find all words in the dictionary that contain two consonants (i.e., non-vowels), two vowels, and then either "p" or "r". These letters should be consecutive, and can be at the beginning, middle, or end of a word.
+Find all words that contain "e", "f", "g", and/or "h" three times in a row, then any letter, and then "m", "n", and/or "o" twice in a row.
+Find words that contain a "q" followed by something other than "u".
+
+
+1. re.compile(r'\w*[^aeiou]{2}[aeiou]{2}[pr]\w*')
+2. re.compile(r'[efgh]{3}\w[mno]{2}')
+3. re.compile(r'q[^u]')
+
+ANCHORS allow us to specify what it must start or end with a certain pattern.
+"^abc" means that the letter "a" must be at the start of a string. - All that ends with vowels [aeiou]$ 
+Words that starts with vowels and end with vowels ^[aeiou]\w*[^aeiou]$
+
+Find all words in the dictionary that start with a capital vowel and contain at least 8 letters
+Find all words in the dictionary, at least 5 letters long, whose first letter isn't capitalized, whose second letter is a vowel, and whose third-to-last letter is either "x", "y", or "z"
+Find all lowercase words in the dictionary that contain three vowels in a row, but in which that three-vowel sequence is at least 5 characters after the front of the word and also 5 characters before the end of the word.
+
+1.  re.compile(r'^[AIEOU]\w{7,}')
+2.  re.compile(r'^[a-z][aeiou]\w*[xyz]\w{2}$')
+2.  re.compile(r'^\w{5,}[aeiou]{3}\w{5,}$')
+
+Find the middle two digits from US-style Social Security numbers (###-##-####)
+Find all words in the dictionary that start with "ex" and end with either 's' or "sing".
+Find all words in which "la" appears at least twice in a row.
+In words containing "la" at least twice in a row, find the first two letters.  (Note that the first two letters shouldn't be "la".  So if the word starts with "la", there will need to be a separate "lala" later on.)
+
+s= ###-##-####
+1. re.findall('(\d{3}-(\d{2})-\d{4})', s)
+2. re.compile('^ex\w*s(ing)?$')
+3. re.compile('(la){2, }')
+4. re.compile('^(\w{2})(la){2, }')
+
+ALTERNATIONS - It allows us to say that we want one thing or another, but not both (cat|dog), a(b|c|d)e
+
+Find all words that contain either "oo" or "ee" immediately after the letter "r" and before any of the letters "p", "s", or "t".
+Find words in the dictionary that start with "b" and have either three vowels or three consonants (i.e., non-vowels) in a row.
+Find words that contain, inside of them, the words "small", "medium", or "large".
+
+1. re.compile('r(oo|ee)[pst]')
+1. re.compile('^b\w*([aeiou]{3}|[^aeiou]{3})')
+1. re.compile('.*(small|medium|large).*')

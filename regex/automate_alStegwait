@@ -1,0 +1,58 @@
+search python errors and their meaning 
+http://nostarch.com/automatestuff/ 
+
+
+1. 	All python datatypes methods 
+		º for list - .index() // returns the index number 
+			   - .append() // 
+		           - .insert(1, "value") // insert a value at any index
+			   - .remove() 
+			   -  del list[index]
+			   - .sort() 
+				// use reverse=True as args for a reverse sorting // this is done in place, don't try to assign it
+				// key=str.lower, to sort alpabetically a-A
+		º for dict - .key()
+			   - .value()
+			   - .items()
+			   - .get()
+			   - .setdefault()
+
+		º for string - .lower()/upper()/casefold(), .isupper(), .islower(), .isspace(), .isalpha(), .isalnum(), .isdecimal()
+			       .isspace(), .istitle(), .startwith(), .endwith(), .join()/.split(), .rjust()/ljust()/center()
+			       .strip()/rstrip()/lstrip()
+
+REGEX
+- /d  stands for pattern digit character 0-9
+	 \d\d\d-\d\d\d-\d\d\d\d == \d{3}-\d{3}-\d{4} 
+- .compile() func from re module is used to create the regex object datatype
+- regex object has methods like .search() - to search for patterns and return a filtered regex object also, usually the first instance
+								.findall() method is used to find all matched cases unlike the .group() that returns the first
+								.group() - to display the found pattern
+- using () parentheses u can group patterns, and catch them by entering .group(1)=> returns the first .group()=> returns all in tuple, .groups() returns all
+- | pipe used to match a pattern or another
+
+- ? for optional matching of patterns that precedes it, Find it, if it available else move on. Non-greedy match(returns the shortest instance)
+- * match 0 or all cases preceding it 
+- + match 1 or all cases preceding it 
+- {} match a repeated number of times, {1,3}-specify the range of repitition - Python’s regular expressions are greedy by default, it will match the longest range
+	unlike returning the shortest first instance, using ? returns the shortest instance. 
+- CHARACTER CLASSES (METACHARACTERS)
+	/d - digits
+	/D - non-digits
+	/w - words, letters, underscore
+	/W - not words, non letters
+	/s - spaces, tab
+	/S - non spaces
+	. - wildcard- matches everything except new line \n, but including re.DOTALL in the compile method will match even /n 
+- [] use to create ur own custom character classes, u can also use a hypen to match a range of character [a-zA-Z0-9]
+- ^ - caret character is used to negate the character class [^a-zA-Z0-9] - Dont show me any of the character class
+- ^ and $ is used to indicate that a match must start from the beginning of the string to the end, indicating it is not enough to match a subset of it 
+
+- SECOND PARAMETERS TO compile method
+	re.DOTALL, recognize all wildcard (.) including new line /n
+	re.IGNORECASE or re.I, don't worry of case-sensitive letters
+	e re.VERBOSE, ignore whitespace and comments, particulary allowing multiple lines doc strings 
+	re.compile('foo', re.DOTALL | re.VERBOSE | re.IGNORECASE), you can combine using the pipe 
+- SUBSTITUTING STRINGS USING sub() method 
+	It accepts two arguments. The first argument is a string to replace any matches. The second is the string for the regular expression
+	It thus returns a string of the result 

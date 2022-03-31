@@ -1,0 +1,36 @@
+The os module
+
+1. - os.getcwd() - get current working directory
+   - os.chdir('path') - change directory 
+   -  os.makedirs() - create folder
+   -  os.path.abspath(path) - convert a relative path to an absolute one 
+   -  os.path.abspath(path) - check if absolute or relative (True/False)
+   -  os.path.relpath(path, start) will return a string of a relative path from the start path
+   -  os.path.dirname(path) will return a string of everything that comes before the last slash in the path argument. 
+    - os.path.basename(path) will return a string of everything that comes after the last slash in the path argument
+    - os.path.split() - return a tuple of the dirname and basename 
+    - os.path.sep - the seperator of path - In cases where u wants to split() into a list
+    - os.path.getsize(path) - get the total size in byte 
+    - os.listdir(path) - list everything in the director, folders & files 
+    - os.path.exists(path) - Does the path exist? 
+    -  os.path.isfile(path) - Is it a file? 
+    - os.path.isdir(path) - Does the folder exists? - This 3 is to prevent any errors
+
+2.  - Absolute path - begins with the root folder
+    - Relative path - begins with the cwd 
+
+3. Plaintext files are .py and .txt files 
+    Binary files are docx, pdf files , images and spreadsheet
+
+4.  Reading and writing files 
+    - open(path) - returns a fileobject, with a default 'r' mode, as a 2nd argument, enter: 
+        'w' - open in write mode 
+        'a' - open in append mode
+    - fileobject.read() - reads the file
+    - fileobject.write() - write to file, either as new or append mode, 
+
+5. Shelves module 
+    Saves information like a dict with keys; 
+    No need to pass second argument(r, w, a)
+
+6. pprint.pformat() - returns a strings of python(list, dict, etc) that can hence be saved to a textfile. 
