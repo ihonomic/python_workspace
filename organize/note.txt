@@ -11,3 +11,31 @@ Shutil module - Helps in file organization of files
 6. shutil.rmtree(path) - Delete folder and contents PERMANENTLY, Use thrid library like 'send2trash' instead 
     - send2trash.send2trash()
 // WALKING THROUGH - Renaming 
+7. os.walk(folder_path) - return 3 values - better to loop through
+                            - current folder
+                            - folders in the current folder
+                            - files in the current folder 
+8. zipfile module - Helps to manage zip files
+    // read
+    - zipfile.ZipFile('zipped_file.zip') - returns a zip object, 
+        * zipobject.namelist() - shows a list contents of the zip files 
+        * zipobject.getinfo('zip content') - returns a content object
+            - contentObject.file_size - 
+            - contentObject.compress_size - 
+        *zipobject.extractall(path=None)  - Extract all 
+        *zipobject.extract(file, path=None) - Extract a single file
+    // write 
+    -  newZip = zipfile.ZipFile('new.zip', 'w') - use 'a' to append
+        newZip.write('spam.txt', compress_type=zipfile.ZIP_DEFLATED)
+        newZip.close()
+
+
+DEBUGGING ERRORS 
+- CALL STACK is the series of func that was called before an error happened - TRACE BACK
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
+    - entering filename as first arguement can write debug to a txt file eg.filename='myProgramLog.txt',
+
+logging.debug('Start of program'), logging.info, logging.warning, logging.error, logging.critical
+logging.disable(logging.CRITICAL) 

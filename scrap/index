@@ -1,0 +1,18 @@
+responseObject = requests.get('link')
+    -   responseObject.raise_for_status() - Raise an error if any
+
+    -   responseObject.text - Access the downloaded content in string format
+    -   responseObject.status_code - Status Code 
+
+    -   To DOWNLOAD TO LOCAL STORAGE, OPEN EMPTY FILE IN WRITE BINARY FORMAT , THEN USE iter_content() method to 
+        loop in chunks
+
+        #   e.g save the image
+            imageFile = open(os.path.join('./scrap/comic_images',
+                                        os.path.basename(imageUrl)), 'wb')
+            for chunk in res.iter_content(100000):
+                imageFile.write(chunk)
+            imageFile.close()
+
+soupObject = bs4.BeautifulSoup(responseObject.text, 'lxml')
+    -   soupObject.getText() - return html content without tags,
