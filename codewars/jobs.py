@@ -15,7 +15,7 @@ def maximum_amount(wealths) -> int:
     houses[0] = wealths[0]
     houses[1] = max(wealths[0], wealths[1])
 
-    # Fill remaining positions
+    # Fill remaining positions - Fibbonacci
     for i in range(2, total_houses):
         houses[i] = max(wealths[i] + houses[i-2], houses[i-1])
 
