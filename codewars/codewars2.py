@@ -9,30 +9,15 @@ Output: ["friday","is", "the"]
 """
 
 
-def num_of_occurence(words, k):
-    sorted_words = [word for word in sorted(words)]
+def num_of_occurence(words, k=3):
+    d = {}
+    for elem in data:
+        d.setdefault(elem, 0)
+        d[elem] += 1
+        
+    sort_d = sorted(d.items(), key=lambda x: x[-1], reverse=True)
 
-    count = {}
-    for i in sorted_words:
-        if not i in count:
-            count[i] = 1
-        else:
-            count[i] += 1
-
-    sorted_dict = {}
-    sorted_keys = sorted(count, key=count.get, reverse=True)
-
-    for w in sorted_keys:
-        sorted_dict[w] = count[w]
-
-    returned_list = []
-    sliced_dict = dict(list(sorted_dict.items())[:k])
-
-    for k, v in sliced_dict.items():
-        returned_list.append(k)
-
-    print(returned_list)
-    return returned_list
+    return [k for k, v in sort_d][0:k]
 
 
 words = ["today", "is", "friday", "friday", "is", "the", "best",
