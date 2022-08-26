@@ -14,8 +14,6 @@ def palindrome(x: int) -> bool:
         # Reassigning reverse, by taking the last integer but adding back in multiples of 10
         reverse = 10 * reverse + x % 10
         x = x // 10  # Reassign x by removing the last Integer
-        print(reverse, "reverse")
-        print(x, "X")
 
     return x == reverse or x == reverse // 10  # Even or Odd
 
