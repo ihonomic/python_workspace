@@ -131,7 +131,10 @@ def countRotation(arr):
 
 
 def countRotation_BinarySearch(arr):
-    """ Look for the index of element where the previous element is greater than it  """
+    """ 
+    - Look for the index of element where the previous element is greater than it 
+    - Minimum element
+    """
     left, right = 0, len(arr)-1
 
     while left <= right:
@@ -147,3 +150,49 @@ def countRotation_BinarySearch(arr):
 
 
 # print(countRotation_BinarySearch([15, 18, 2, 3, 6, 12]))
+
+# ========================== FIND INDEX IN A ROTATED ARRAY  =================================================================
+def search(nums, target):
+    """ 
+    Search for the new index of a number in an already rotated sorted array. 0(logn)
+    - min(), max() - If no target is given, but you're required to find the minimum or maximum index
+    - if numbers are not distinct perform a while loop to eliminate repeated numbers. 
+    """
+    left, right = 0, len(nums) - 1
+    while left <= right:
+
+        # ==========================
+        #   Does it contain duplicates(Don't do this if DISTINCT)
+        while left < right and nums[left] == nums[left+1]:
+            left = left+1
+        while left < right and nums[right] == nums[right-1]:
+            right = right - 1
+        # ==============================
+
+        mid = left + (right - left) // 2
+
+        if nums[mid] == target:
+            return mid
+
+        #   Since only one side can be sorted from the middle
+        #   Is it left? - Compare left element to mid
+        if nums[left] <= nums[mid]:
+            #   Check if the target falls in-between left side
+            if nums[left] <= target <= nums[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        else:  # Is right?
+            #   Check if the target falls in-between right side
+            if nums[mid] <= target <= nums[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+    return -1
+
+
+# print(search([4, 5, 6, 7, 0, 1, 2], 0))
+# ================================ CHECK IF A NUMBER IN ROTATED ARRAY 0(logn) ==========================
+def checkIfPresent(arr, target):
+    pass
