@@ -22,4 +22,4 @@ def parity(x):
     return result
 
 
-print(parity(5))
+parity(5)
