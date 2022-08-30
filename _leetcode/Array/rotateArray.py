@@ -50,6 +50,35 @@ def traverseArray(arr, d, n):
 # rotateArray(arr, d, n)
 # traverseArray(arr, d, n)
 
+# ======================== RIGHT ROTATING AN ARRAY =========================================
+def rightRotateByK(arr, k):
+    ''' Rotate the array by k element from the right, e.g k=3 
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] -> [8, 9, 10, 1, 2, 3, 4, 5, 6, 7]
+    '''
+    n = len(arr)
+    k = k % n  # For k greater than arr length
+
+    #   REVERSE ALGORITHM - (time, space) complexity = 0(n), 0(1)
+
+    # 1, 2, 3, 4, 5, 6, 7, 10, 9, 8 - rotate k
+    # 7,6,5,4,3,2,1 10, 9, 8 - rotate n-k
+    # 8,9,10,1,2,3,4,5,6,7 - rotate n
+
+    def rotateRange(array, start, stop):
+        while start < stop:
+            array[start], array[stop] = array[stop], array[start]
+            start += 1
+            stop -= 1
+
+    rotateRange(arr, n-k, n-1)
+    rotateRange(arr, 0, n-1-k)  # last index - k
+    rotateRange(arr, 0, n-1)
+
+    return arr
+
+
+print(rightRotateByK([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3))
+
 
 # =====================  NUMBER 2 - ROTATE ARRAY (CYCLIC) ABOUT FIXED POINT =============================
 
