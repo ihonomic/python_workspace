@@ -180,7 +180,7 @@ def countRotation_BinarySearch(arr):
 
 # print(countRotation_BinarySearch([15, 18, 2, 3, 6, 12]))
 
-# ========================== FIND INDEX IN A ROTATED ARRAY  =================================================================
+# ========================== FIND INDEX OF A TARGET IN A ROTATED ARRAY  =================================================================
 def search(nums, target):
     """ 
     Search for the new index of a number in an already rotated sorted array. 0(logn)
@@ -222,6 +222,35 @@ def search(nums, target):
 
 
 # print(search([4, 5, 6, 7, 0, 1, 2], 0))
-# ================================ CHECK IF A NUMBER IN ROTATED ARRAY 0(logn) ==========================
-def checkIfPresent(arr, target):
-    pass
+
+# =========== FIND THE START AND END INDEX OF A TARGET 0(logn) ==========================
+def searchRange(self, nums: list, target: int) -> list:
+    """
+        - starting & ending position of a target.  
+        - Binary search the target. 
+        - Binary search the number greater than the target. Since array is sorted.
+        - E.g => [1,2,3,7,7,7,7,8,10]
+    """
+
+    def search(x):
+        left, right = 0, len(nums)-1
+
+        while left <= right:
+            mid = left + (right - left) // 2
+
+            if x <= nums[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        return left
+
+    start = search(target)
+
+    # Find index of the num greater than the target, substract by 1,
+    #  to get the previous index that is similar to the target.
+    end = search(target+1) - 1
+
+    if start <= end:
+        return [start, end]
+
+    return [-1, -1]

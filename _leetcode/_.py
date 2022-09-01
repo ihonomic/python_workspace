@@ -1,3 +1,5 @@
+from collections import Counter
+
 A = [1, 3, 2, 1, 4, 17, 9]
 
 
@@ -22,4 +24,32 @@ def parity(x):
     return result
 
 
-parity(5)
+# parity(5)
+# ==========================================================================================
+#   Method 1
+def commonChars(arr):
+    check = list(arr[0])
+    for word in arr[1:]:
+        repatedChar = []
+        for char in word:
+            if char in check:
+                repatedChar.append(char)
+                check.remove(char)
+
+        check = repatedChar
+    return check
+
+#   Method 2
+
+
+def commonChars2(arr):
+
+    res = Counter(arr[0])
+
+    for word in arr[1:]:
+        res &= Counter(word)
+
+    return list(res.elements())
+
+
+print(commonChars2(["bella", "label", "roller"]))
