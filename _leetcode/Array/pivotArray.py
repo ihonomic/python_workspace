@@ -6,7 +6,7 @@ def pivotIndex(nums: list) -> int:
     Search for the index where the sum(left) == sum(right)
     - Two pointers.
     - Let the right be the sum of the total array, 
-    - Keep substracting from the right & adding to the left, if they become same
+    - Keep substracting from the right & adding to the left, until they become similar
     - return the index
 
     """
