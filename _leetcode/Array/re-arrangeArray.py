@@ -36,8 +36,11 @@ def reOrderArray(A):
     Re-order the array such that positive elements appears in odd positions 
     & negative elements in even positions
     """
+    #   PARTITIONING
     # - QuickSort , consider 0 as pivot & divide the array around it
     #   Take all the negative to left side
+    #   NOTE: the right side order isn't maintained.
+
     i = 0
     for j in range(len(arr)):
         if arr[j] < 0:
@@ -57,7 +60,7 @@ def reOrderArray(A):
 
 
 # print(reOrderArray([-1, 2, -3, 4, 5, 6, -7, 8, 9]))
-# ==================================================================================
+# ======================= UNSOLVED ===========================================================
 def reOrderArray2(A):
     """
     Re-order an array such that every positive number is followed by a negative number & vice versa. 
@@ -66,16 +69,76 @@ def reOrderArray2(A):
     [-5,-2,5,2,4,7,1,8,0,-8] -> [-5,5,-2,2,-8,4,7,1,8,0]
 
     soln
-    - Out-of-place elements, NOTE: negative elements should be in even indexes & positives in odd indexes
+    - Consider 'Out-of-place' elements, NOTE: negative elements should be in even indexes & positives in odd indexes
     - Swap if two opposite elements are out of place. 
     """
     arr = [1, 2, 3, -4, -1, 4]
-    left, mid, right = 0, 0, len(arr)-1
 
-    while left <= right:
-        if arr[left] >= 0 and left % 2 == 0:
-            left += 1
-            mid += 1
-        elif arr[left]
+    def rightRotate(array, outOfPlace, current):
+        for i in range(i, outOfPlace, -1):
+            array[i] = array[i-1]
+        array[outOfPlace] = array[current]
+
+    outOfPlace = -1
+    for i in range(len(arr)):
+        if outOfPlace >= 0:
+
+            if (arr[i] >= 0 and arr[outOfPlace] < 0) or (arr[i] < 0 and arr[outOfPlace] >= 0):
+                rightRotate(arr, outOfPlace, i)
+            ...
+
+        if outOfPlace == -1:
+            ...
+
+    print(arr)
+
+
+# reOrderArray2([1, 2, 3, -4, -1, 4])
+# ============================================
+
+def moveZeros(A):
+    """ 
+    Move all zeros in the array to the end 
+    """
+    arr = [5, 0, 0, 4, 3]
+
+    i = 0
+    for j in range(len(arr)):
+        if arr[j] != 0:
+            arr[j], arr[i] = arr[i], arr[j]
+            i += 1
 
     return arr
+
+
+# print(moveZeros([1, 2, 0, 4, 3, 0, 5, 0]))
+# =========================================================
+def moveNegativePositives(A):
+    """ 
+    Move all negatives to left & positives to right, retaining the order
+    - start from the second index
+    - if positive found, skip it,
+    - if negative found, traverse it backwards until a negative is before it
+    """
+    # arr = [12, 11, -13, -5, 6, -7, 5, -3, -6]
+    arr = [5, 5, -3, 4, -8, 0, -7, 3, -9, -3, 9, -2, 1]
+
+    for i in range(1, len(arr)):
+        #   if element is positive, skip
+        key = arr[i]
+        if key > 0:
+            continue
+
+        #   if element is negative, shift all positive to the right
+        #   previous index,
+        j = i - 1
+        # Stop if j is less than last index or a negative element is now prevoius
+        while j >= 0 and arr[j] > 0:
+            arr[j+1] = arr[j]
+            j = j-1
+
+        arr[j+1] = key
+
+    return arr
+
+# print(moveNegativePositives([12, 11, -13, -5, 6, -7, 5, -3, -6]))
