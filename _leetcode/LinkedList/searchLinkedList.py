@@ -88,6 +88,22 @@ class LinkedList:
 
         print(current.data)
 
+    def printNthFromLast(self, index):
+        ''' Return Node value from the end '''
+        fast = self.head
+        slow = self.head
+
+        #   Move fast to the nth node from the beginning
+        while index:
+            if fast is None:
+                return
+            fast = fast.next
+            index -= 1
+
+        #   If it's an empty list
+        if fast is None:
+            ...
+
 
 def searchLinkedList():
     arr = [14, 21, 11, 30, 10]
