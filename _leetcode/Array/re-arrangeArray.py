@@ -56,11 +56,14 @@ def reOrderArray(A):
 
         negative += 2  # jump twice
         positive += 1  # jump once
+
     return arr
 
 
 # print(reOrderArray([-1, 2, -3, 4, 5, 6, -7, 8, 9]))
 # ======================= UNSOLVED ===========================================================
+
+
 def reOrderArray2(A):
     """
     Re-order an array such that every positive number is followed by a negative number & vice versa. 
@@ -100,23 +103,26 @@ def moveZeros(A):
     """ 
     Move all zeros in the array to the end 
     """
-    arr = [5, 0, 0, 4, 3]
+    arr = [5, 0, 0, 4, 0, 3]
 
     i = 0
     for j in range(len(arr)):
-        if arr[j] != 0:
+        if arr[j] == 0:
             arr[j], arr[i] = arr[i], arr[j]
             i += 1
 
     return arr
 
 
-# print(moveZeros([1, 2, 0, 4, 3, 0, 5, 0]))
+# print(moveZeros([5, 0, 0, 4, 3]))
 # =========================================================
+
+
 def moveNegativePositives(A):
     """ 
     Move all negatives to left & positives to right, retaining the order
     - start from the second index
+    - start from second index
     - if positive found, skip it,
     - if negative found, traverse it backwards until a negative is before it
     """
@@ -133,12 +139,11 @@ def moveNegativePositives(A):
         #   previous index,
         j = i - 1
         # Stop if j is less than last index or a negative element is now prevoius
-        while j >= 0 and arr[j] > 0:
+        while j >= 0 and arr[j] >= 0:
             arr[j+1] = arr[j]
             j = j-1
 
         arr[j+1] = key
 
     return arr
-
 # print(moveNegativePositives([12, 11, -13, -5, 6, -7, 5, -3, -6]))
