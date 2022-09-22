@@ -1,5 +1,11 @@
+"""
+- You will always need another variable to update a linkedList
+tail = dummy. Where, tail is used to update dummy
+"""
+
+
 class Node:
-    def __init__(self, data, next):
+    def __init__(self, data=None, next=None):
         self.data = data
         self.next = next
 
@@ -7,6 +13,7 @@ class Node:
 class LinkedList:
     def __init__(self):
         self.head = None
+        self.head2 = None   # for two list questions ONLY
 
     def printList(self):
         head = self.head
@@ -38,6 +45,33 @@ class LinkedList:
         head = self.head = None
         for data in data_list:
             self.append(data)
+
+        ####    SECOND HEAD     ########################################
+
+    def printList2(self):
+        head2 = self.head2
+        s = ""
+        while head2:
+            s += str(head2.data)+'-->'
+            head2 = head2.next
+        print(s, "<--- Second head")
+
+    def appendList2(self, data):
+        if self.head2 is None:
+            self.head2 = Node(data, None)
+            return
+
+        head = self.head2
+        while head.next:
+            head = head.next
+        head.next = Node(data, None)
+
+    def appendAllToSecondHead(self, data_list):
+        self.head2 = None
+        for data in data_list:
+            self.appendList2(data)
+
+        ####   END SECOND HEAD     ####
 
     def getLength(self):
         head = self.head
@@ -88,6 +122,17 @@ class LinkedList:
         currentX.next = currentY.next
         currentY.next = temp
 
+    def deleteNode(self, node):
+        """ 
+        - Given a node, that is not beginning or ending, remove the node from the list. 
+        [4,5,1,9], remove node 5 -> [4,1,9]
+        [4,1,9], remove node 1 -> [4,5,9]
+
+        Method 1 - Clone the given node with its next, (value & pointer) and then remove the next
+        """
+        node.val = node.next.val
+        node.next = node.next.next
+
     def removeElements(self, target):
         """ Remove all node that equals target. 
         Slow & Fast pointers, Shift slow to fast if fast is not target.
@@ -114,16 +159,43 @@ class LinkedList:
         fast = self.head
 
         while fast and fast.next:
-            if fast.data == fast.next.data:
+
+            while fast.next and fast.data == fast.next.data:  # As long as it keeps re-occuring
                 fast.next = fast.next.next
-            else:
-                fast = fast.next
+
+            fast = fast.next
 
     def removeDuplicatesUnsorted(self):
         """ In an Unsorted list, Remove duplicate, All elements should be unique. Retain the order 
         Method 1 - Use hashSet, hashMap to save previously seen, 0(n) space
         Method 2 - Sort the list 0(nlogn), 
         """
+
+    def removeNthNodeFromEnd(self, n):
+        """
+        - slow & fast pointers, fast-track 'fast' to nth position
+        - move slow and new fast pointer until fast get to end, slow will be at the nth node from end.
+        """
+        dummy = Node()
+        tail = dummy  # use to update dummy
+
+        slow = fast = self.head
+
+        for _ in range(1, n):
+            fast = fast.next
+
+        while fast and fast.next:
+            tail.next = slow    # update tail pointers before slow shift to next
+            tail = tail.next
+
+            slow = slow.next
+            fast = fast.next
+
+        #   it stopped because fast has ended, so slow is at the nth node from end
+        #   dummy can equal the next node after slow
+        tail.next = slow.next
+
+        return dummy.next
 
     def nthNodeFromEnd(self, n):
         """ Find the nth Node from the end
@@ -298,28 +370,64 @@ class LinkedList:
         print("Is palindrome")
         return True
 
-    def reOrderEvenOdd(self):
-        """ While retaining the order, take all even to one-side.
-        Method 1 - Easily done with linear space -> append to array and build new linkedList
-        Method 2 -  
-        """
-        stack = []
-        while self.head:
-            stack.append(self.head.data)
-            self.head = self.head.next
+    def reOrderEvenOdd2(self):
+        head = self.head
+        end = self.head
+        prev = None
+        curr = self.head
 
-        # Sort
-        i = 0
-        for j in range(len(stack)):
-            if stack[j] % 2 == 0:
-                stack[i], stack[j] = stack[j], stack[i]
-                i += 1
+        # Get pointer to last Node
+        while (end.next != None):
+            end = end.next
 
-        #   build linkedlist
-        for i in range(len(stack)):
-            self.append(stack[i])
+        new_end = end
 
-        """Method 2 """
+        # Consider all odd nodes before getting first even node
+        while (curr.data % 2 != 0 and curr != end):
+            new_end.next = curr
+            curr = curr.next
+            new_end.next.next = None
+            new_end = new_end.next
+
+        # do following steps only if there is an even node
+        if (curr.data % 2 == 0):
+
+            head = curr
+
+            # now curr points to first even node
+            while (curr != end):
+
+                if (curr.data % 2 == 0):
+
+                    prev = curr
+                    curr = curr.next
+
+                else:
+
+                    # Break the link between prev and curr
+                    prev.next = curr.next
+
+                    # Make next of curr as None
+                    curr.next = None
+
+                    # Move curr to end
+                    new_end.next = curr
+
+                    # Make curr as new end of list
+                    new_end = curr
+
+                    # Update curr pointer
+                    curr = prev.next
+
+        # We have to set prev before executing rest of this code
+        else:
+            prev = curr
+
+        if (new_end != end and end.data % 2 != 0):
+
+            prev.next = end.next
+            end.next = None
+            new_end.next = end
 
     def reOrderList(self):
         """ 
@@ -354,12 +462,145 @@ class LinkedList:
 
             first, second = temp1, temp2
 
+    def pairSwap(self):
+        """Swap 2 adjacent nodes consecutively.
+         [1->2->3->4->5->6] => -[2>1->4->3->6->5]
+         [1] => [1] 
+         [1->2->3->4->5] => [2->1->4->3->5]
+         Method 1 - Swap data only
+        """
+        if self.head is None or self.head.next is None:
+            return self.head
+        fast = self.head
+
+        while fast and fast.next:
+            # swap
+            fast.data, fast.next.data = fast.next.data, fast.data
+            # # move pointer twice -
+            fast = fast.next.next
+
+    def moveLastToFirst(self):
+        """ Move Last to first
+        [1->2->3->4->5] => [5->1->2->3->4]
+        Method 1 - Get data of the last, point previous to last to None,
+                push the data to first
+        """
+        if self.head is None or self.head.next is None:
+            return self.head
+
+        prev = fast = self.head
+        while fast and fast.next:
+            prev = fast
+            fast = fast.next
+        #   close previous
+        prev.next = None
+
+        # 1. push from beginning
+        # self.push(fast.data)
+        #                                    OR
+        # 2. Re-point
+        fast.next = self.head
+        self.head = fast
+
+    def merge2sortedLists(self, l1=None, l2=None):
+        """ 
+        - Merge 2 sorted lists
+        [1,2,4,5] & [2,2,3] -> [1,2,2,2,3,4,5]
+        """
+        dummy = Node()
+        left, right = l1 or self.head, l2 or self.head2
+        tail = dummy    # to update dummy
+
+        while left and right:
+            if left.data <= right.data:
+                tail.next = left
+                left = left.next
+            else:
+                tail.next = right
+                right = right.next
+
+            tail = tail.next
+
+        if left:
+            tail.next = left
+        if right:
+            tail.next = right
+
+        return dummy.next
+
+    def mergeKArrayOfList(self, lists=[]):
+        """Given an array of linkedlists, Merge all in non-decending order
+        [[1,2,3,4,5], [1,3,5,6], [0]] -> [0,1,1,2,3,3,4,5,5,6]
+        NOTE:  I used the default head nodes to build the lists
+        Method : Loop through the given lists by 2-steps, Take note for odd length (l2 = None)
+                - Merge each lists per loop, 
+                - save the returns of the merge in an array
+                - After every loop, reset the lists to the arrays of merge outcomes
+            This happens until the lists size is less than 1.
+        """
+        lists = [self.head, self.head2]
+
+        while len(lists) > 1:
+            mergeLists = []
+
+            for i in range(0, len(lists), 2):
+                l1 = lists[i]
+                l2 = lists[i + 1] if len(lists) > i + \
+                    1 else None  # for odd length
+
+                #   merge both lists & save the return
+                mergeLists.append(self.merge2sortedLists(l1, l2))
+
+            lists = mergeLists
+
+        return lists[0]
+
+    def addTwoLinkedLists(self):
+        """ Add two linkedLists, Take notes of carryOver
+        [2,4,3] + [5,6,4] = [7,0,8]
+        [9,9,9,9,9,9,9] + [9,9,9,9] = [8,9,9,9,0,0,0,1]
+        NOTE: If one list runs out, default to 0
+        """
+        dummy = Node()
+        tail = dummy  # Use to modify dummy
+        l1, l2 = self.head, self.head2
+        carry = 0
+
+        while l1 or l2 or carry:
+            val1 = l1.data if l1 else 0
+            val2 = l2.data if l2 else 0
+
+            total = val1 + val2 + carry
+            carry, total = divmod(total, 10)
+
+            #   Assign next pointer and move to next
+            tail.next = Node(total)
+            tail = tail.next
+
+            l1 = l1.next if l1 else None
+            l2 = l2.next if l2 else None
+
+        # Print dummy to see
+#         s = ''
+#         h = dummy.next
+#         while h:
+#             s += f"{str(h.data)}"
+#             h = h.next
+
+#         print(s)
+
+        return dummy.next
+
 
 if __name__ == "__main__":
     ll = LinkedList()
-    ll.push(6)
+    # ll.push(6)
+
     ll.appendAll([1, 2, 3, 4, 5])
+    ll.appendAllToSecondHead([1, 3, 5, 6])
+
     ll.printList()
+    ll.printList2()
     # ll.nthNodeFromEnd(3)
     # ll.findMiddleNode()
     # ll.countNodeOccurrence(3)
@@ -371,6 +612,12 @@ if __name__ == "__main__":
     # ll.reOrderList()      - Not understood
     # ll.removeDuplicates()
     # ll.swapNodes(3,4)
-    ll.reOrderEvenOdd()
+    # ll.reOrderEvenOdd2()    - Not understood
+    # ll.pairSwap()
+    # ll.moveLastToFirst()
+
+    # ll.merge2sortedLists()
+    # ll.mergeKArrayOfList()
+    ll.addTwoLinkedLists()
 
     ll.printList()
