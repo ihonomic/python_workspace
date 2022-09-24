@@ -1,5 +1,9 @@
 """ Merge sort. Create One sorted array from 2 sorted Array
-    Two pointers
+    
+     Method : Recursively, 
+            1. get middle,
+            2. sort left, sort right - Recursive
+            3. Merge left & right - Merge two sorted lists
 """
 
 
@@ -48,6 +52,6 @@ def merge_two_sorted(a, b, arr):
 
 
 if __name__ == "__main__":
-    arr = [10, 3, 15, 7, 8, 23, 98, 29]
+    arr = [2, 0, 2, 1, 1, 0]
     merge_sort(arr)
     print(arr)

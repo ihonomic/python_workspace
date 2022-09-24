@@ -66,12 +66,12 @@ def rightRotateByK(arr, k):
 
     k = k % len(arr)
 
-    #  METHOD 1
+    #                           ====>  METHOD 1
     # for j in range(k):
     #     for i in range(len(arr)-2, -1, -1):
     #         arr[i], arr[i+1] = arr[i+1], arr[i]
 
-    #   METHOD 2
+    #                           ====>  METHOD 2
 
     #   REVERSE ALGORITHM - (time, space) complexity = 0(n), 0(1)
 
@@ -85,7 +85,7 @@ def rightRotateByK(arr, k):
     rotateLength(arr, first, last-k)
     rotateLength(arr, first, last)
 
-    def rotateLength(self, arr, start, stop):
+    def rotateLength(arr, start, stop):
         while start < stop:
             arr[start], arr[stop] = arr[stop], arr[start]
             start += 1

@@ -81,6 +81,15 @@ class LinkedList:
             head = head.next
         return count
 
+    def sortList(self):
+        """ Sort list in ascending order (non-decending)
+        - Merge sort
+        Method : Recursively, 
+        1. get middle,
+        2. sort left, sort right 
+        3. Merge left & right
+        """
+
     def swapNodes(self, x, y):
         """ Swap nodes without swapping data. Assume the list contains distinct, values, only do this 
         if x and y exist and are different values
@@ -171,6 +180,34 @@ class LinkedList:
         Method 2 - Sort the list 0(nlogn), 
         """
 
+    def removeAll_DuplicateSorted(self):
+        """ If element is duplicated, remove all of its kind 
+        [1,2,3,3,4,4,5] => [1,2,5]
+        Method 1: HashMap - (time, space) complexity = 0(n), 0(n)
+        Method 2: dummy head, ensure that the next value dummy would point to, has no
+                similar value - use while looop to remove all
+        """
+        d = {}
+        dummy = ListNode()
+        tail = dummy
+
+        fast = head
+
+        while fast:
+            if fast.val not in d:
+                d[fast.val] = 1
+            else:
+                d[fast.val] += 1
+
+            fast = fast.next
+
+        for k, v in d.items():
+            if v <= 1:
+                tail.next = ListNode(k)
+                tail = tail.next
+
+        return dummy.next
+
     def removeNthNodeFromEnd(self, n):
         """
         - slow & fast pointers, fast-track 'fast' to nth position
@@ -223,8 +260,8 @@ class LinkedList:
                             - slow.next
                             - fast.next.next
         """
-        slow = fast = self.head
-        while fast:
+        slow, fast = self.head, self.head.next
+        while fast and fast.next:
             slow = slow.next
             fast = fast.next.next
 
@@ -279,8 +316,10 @@ class LinkedList:
         Method 2 - Flag each node, During the node instantiation, self.flag = 0, 
         when traversing, update flag to 1.
         Method 3 - Floyd's Cycle- Finding algorithm (Using a fast & slow pointer), Fast move 2 steps, 
-        slow moves 1 step. If at any point, fast == slow, return true. But return false if fast approaches None
-        Method 4 - Traverse & Change the node data, to anything (e.g -1), if -1 is found again, return True
+        slow moves 1 step. 
+        If at any point, fast == slow, return true. But return false if fast approaches None
+        Method 4 - Traverse & Change the node data, to anything (e.g -1),
+        if -1 is found again, return True
         """
         # Initialize a loop linkedList
         self.createLoop(2)
@@ -340,6 +379,53 @@ class LinkedList:
     def reverseLinkedListRecursive(self):
         """ Reverse a LinkedList Recursive approach """
 
+    def rotateRight(self, k):
+        """ Rotate List by k length
+        [1,2,3,4,5], k = 2 => [4,5,1,2,3]
+        [0,1,2], k = 4 => [2,0,1]
+     - Limit k, k % len(arr) - incase k greater than the length
+     - Loop to the kth node from the end,
+        i.e Moving fast pointer ahead by k and then move both.
+     - End the list
+     - Link the second half nodes to the beginning 
+        """
+        head_p = self.head
+        len_head = self.get_length(head_p)
+
+        if not len_head:
+            return head
+
+        k = k % len_head
+
+        if not k:
+            return head
+
+        dummy = ListNode()
+        tail = dummy
+
+        slow = fast = head
+        for _ in range(1, k):
+            fast = fast.next
+
+        while fast and fast.next:
+
+            # update pointer
+            tail.next = slow
+            tail = tail.next
+
+            slow = slow.next
+            fast = fast.next
+
+        #   End the list stored in dummy
+        tail.next = None
+
+        head = slow
+        while head and head.next:
+            head = head.next
+        head.next = dummy.next
+
+        return slow
+
     def isPalindrome(self):
         """
         Method 1 - Create an array stack, append from the linkedList and check if palindrome,
@@ -369,65 +455,6 @@ class LinkedList:
             right = right.next
         print("Is palindrome")
         return True
-
-    def reOrderEvenOdd2(self):
-        head = self.head
-        end = self.head
-        prev = None
-        curr = self.head
-
-        # Get pointer to last Node
-        while (end.next != None):
-            end = end.next
-
-        new_end = end
-
-        # Consider all odd nodes before getting first even node
-        while (curr.data % 2 != 0 and curr != end):
-            new_end.next = curr
-            curr = curr.next
-            new_end.next.next = None
-            new_end = new_end.next
-
-        # do following steps only if there is an even node
-        if (curr.data % 2 == 0):
-
-            head = curr
-
-            # now curr points to first even node
-            while (curr != end):
-
-                if (curr.data % 2 == 0):
-
-                    prev = curr
-                    curr = curr.next
-
-                else:
-
-                    # Break the link between prev and curr
-                    prev.next = curr.next
-
-                    # Make next of curr as None
-                    curr.next = None
-
-                    # Move curr to end
-                    new_end.next = curr
-
-                    # Make curr as new end of list
-                    new_end = curr
-
-                    # Update curr pointer
-                    curr = prev.next
-
-        # We have to set prev before executing rest of this code
-        else:
-            prev = curr
-
-        if (new_end != end and end.data % 2 != 0):
-
-            prev.next = end.next
-            end.next = None
-            new_end.next = end
 
     def reOrderList(self):
         """ 
@@ -582,42 +609,103 @@ class LinkedList:
 
         # Print dummy to see
 #         s = ''
-#         h = dummy.next
-#         while h:
-#             s += f"{str(h.data)}"
-#             h = h.next
+#         d = dummy.next
+#         while d:
+#             s += f"{str(d.data)}"
+#             d = d.next
 
 #         print(s)
 
         return dummy.next
+
+    def intersectionOfTwoLists(self):
+        """ Both lists are sorted,  Return a new list of common elements
+        A= [1,2,3,4,6] B= [2,4,6,8] -> [2,4,6] 
+        Method 1 - Using a dummy node. Add to dummy until A or B is None,
+                -skip if elements are not similar, advance the list with smaller element
+        """
+        dummy = Node()
+        tail = dummy  # pointer to alter node
+        l1, l2 = self.head, self.head2
+
+        while l1 and l2:
+            if l1.data == l2.data:
+                #   Add dummy pointer and update to next
+                tail.next = l1
+                tail = tail.next
+
+                l1 = l1.next
+                l2 = l2.next
+            elif l1.data < l2.data:
+                l1 = l1.next
+            else:
+                l2 = l2.next
+
+        return dummy.next
+
+    def getIntersectionPointOf2Lists(self):
+        """ Return the node where 2 lists first became similar.
+        i.e one head got linked to another forming a 'Y' intersection
+        Method 1 - Using two loops, 
+        Outer loop should compare its current value with each value of the next
+
+        Question 2 - Leetcode 160. 
+        This question is more about checking for node that has the same ID, pointing to same location.
+        Method - Loop to the end of both lists, if any becomes None, assign the pointer to the next list, 
+        This continues they intersect at the same node (Floyd)
+        """
+
+        headA, headB = self.head, self.head2
+
+        while headA:
+            while headB:
+                if headA.data == headB.data:
+                    print(headA.data)
+                    return headA.data
+                headB = headB.next
+            headA = headA.next
+        return None
+
+    # Question 2 - Leetcode 160
+        one = headA
+        two = headB
+        while one != two:
+            one = headB if one is None else one.next
+            two = headA if two is None else two.next
+        return one
 
 
 if __name__ == "__main__":
     ll = LinkedList()
     # ll.push(6)
 
-    ll.appendAll([1, 2, 3, 4, 5])
+    ll.appendAll([1, 2, 3, 4, 5, 6])
     ll.appendAllToSecondHead([1, 3, 5, 6])
 
     ll.printList()
-    ll.printList2()
+    # ll.printList2()
     # ll.nthNodeFromEnd(3)
-    # ll.findMiddleNode()
+    ll.findMiddleNode()
     # ll.countNodeOccurrence(3)
     # ll.detectAndCountNodesInLoop()
     # ll.isPalindrome()
+    # ll.rotateRight(2)
     # ll.reverseLinkedList()
+    # ll.reverseNodesKGroups(3)
     # ll.removeElements(6)
 
     # ll.reOrderList()      - Not understood
     # ll.removeDuplicates()
     # ll.swapNodes(3,4)
-    # ll.reOrderEvenOdd2()    - Not understood
+
     # ll.pairSwap()
     # ll.moveLastToFirst()
 
     # ll.merge2sortedLists()
     # ll.mergeKArrayOfList()
-    ll.addTwoLinkedLists()
+    # ll.addTwoLinkedLists()
+
+    # ll.intersectionOfTwoLists()
+    # ll.getIntersectionPointOf2Lists()
 
     ll.printList()
