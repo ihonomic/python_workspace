@@ -188,10 +188,10 @@ class LinkedList:
                 similar value - use while looop to remove all
         """
         d = {}
-        dummy = ListNode()
+        dummy = Node()
         tail = dummy
 
-        fast = head
+        fast = self.head
 
         while fast:
             if fast.val not in d:
@@ -203,7 +203,7 @@ class LinkedList:
 
         for k, v in d.items():
             if v <= 1:
-                tail.next = ListNode(k)
+                tail.next = Node(k)
                 tail = tail.next
 
         return dummy.next
@@ -400,7 +400,7 @@ class LinkedList:
         if not k:
             return head
 
-        dummy = ListNode()
+        dummy = Node()
         tail = dummy
 
         slow = fast = head
