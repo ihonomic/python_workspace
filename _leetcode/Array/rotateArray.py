@@ -52,11 +52,26 @@ def traverseArray(arr, d, n):
 
 # ======================== RIGHT ROTATING AN ARRAY =========================================
 def rightRotateByK(arr, k):
-    ''' Rotate the array by k element from the right, e.g k=3 
+    """
+    Rotate the array by k element from the right, e.g k=3 
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] -> [8, 9, 10, 1, 2, 3, 4, 5, 6, 7]
-    '''
-    n = len(arr)
-    k = k % n  # For k greater than arr length
+    Method 1
+            - 0(n^2) TC swaps, starting from the end
+    Method 2 
+            - Limit k, k % len(arr) - incase k greater than the length
+            - Rotate k length,
+            - Rotate arr - k length
+            - Rotate arr
+    """
+
+    k = k % len(arr)
+
+    #  METHOD 1
+    # for j in range(k):
+    #     for i in range(len(arr)-2, -1, -1):
+    #         arr[i], arr[i+1] = arr[i+1], arr[i]
+
+    #   METHOD 2
 
     #   REVERSE ALGORITHM - (time, space) complexity = 0(n), 0(1)
 
@@ -64,17 +79,17 @@ def rightRotateByK(arr, k):
     # 7,6,5,4,3,2,1 10, 9, 8 - rotate n-k
     # 8,9,10,1,2,3,4,5,6,7 - rotate n
 
-    def rotateRange(array, start, stop):
+    first, last = 0, len(arr)-1
+
+    rotateLength(arr, len(arr)-k, last)
+    rotateLength(arr, first, last-k)
+    rotateLength(arr, first, last)
+
+    def rotateLength(self, arr, start, stop):
         while start < stop:
-            array[start], array[stop] = array[stop], array[start]
+            arr[start], arr[stop] = arr[stop], arr[start]
             start += 1
             stop -= 1
-
-    rotateRange(arr, n-k, n-1)
-    rotateRange(arr, 0, n-1-k)  # last index - k
-    rotateRange(arr, 0, n-1)
-
-    return arr
 
 
 print(rightRotateByK([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3))
@@ -180,7 +195,7 @@ def countRotation_BinarySearch(arr):
 
 # print(countRotation_BinarySearch([15, 18, 2, 3, 6, 12]))
 
-# ========================== FIND INDEX IN A ROTATED ARRAY  =================================================================
+# ========================== FIND INDEX OF A TARGET IN A ROTATED ARRAY  =================================================================
 def search(nums, target):
     """ 
     Search for the new index of a number in an already rotated sorted array. 0(logn)
@@ -222,6 +237,35 @@ def search(nums, target):
 
 
 # print(search([4, 5, 6, 7, 0, 1, 2], 0))
-# ================================ CHECK IF A NUMBER IN ROTATED ARRAY 0(logn) ==========================
-def checkIfPresent(arr, target):
-    pass
+
+# =========== FIND THE START AND END INDEX OF A TARGET 0(logn) ==========================
+def searchRange(self, nums: list, target: int) -> list:
+    """
+        - starting & ending position of a target.  
+        - Binary search the target. 
+        - Binary search the number greater than the target. Since array is sorted.
+        - E.g => [1,2,3,7,7,7,7,8,10]
+    """
+
+    def search(x):
+        left, right = 0, len(nums)-1
+
+        while left <= right:
+            mid = left + (right - left) // 2
+
+            if x <= nums[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        return left
+
+    start = search(target)
+
+    # Find index of the num greater than the target, substract by 1,
+    #  to get the previous index that is similar to the target.
+    end = search(target+1) - 1
+
+    if start <= end:
+        return [start, end]
+
+    return [-1, -1]
