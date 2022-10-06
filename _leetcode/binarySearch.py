@@ -1,3 +1,44 @@
+def search(nums: list, target: int) -> bool:
+    """ Return True, if a target is present in an array thats slightly rotated. 
+    - Binary Search 
+    """
+
+    if len(nums) == 1:
+        if nums[0] != target:
+            return False
+        else:
+            return True
+
+    left, right = 0, len(nums)-1
+
+    while left <= right:
+
+        # remove duplicates
+        while left < right and nums[left] == nums[left+1]:
+            left += 1
+        while left < right and nums[right] == nums[right-1]:
+            right -= 1
+
+        mid = left + (right - left) // 2
+
+        if nums[mid] == target:
+            return True
+
+        #   check to know where to shift the pointers
+        if nums[left] <= nums[mid]:
+            if nums[left] <= target <= nums[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        else:
+            if nums[mid] <= target <= nums[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+    return False
+
+
 def sqrt(x):
     left, right = 0, x
 

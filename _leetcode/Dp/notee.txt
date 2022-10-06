@@ -1,0 +1,14 @@
+Bottom- up : 
+    Selecting the smallest values of the input, slowly increasing the input argument value. 
+    Solve and save in a table. As larger input surfaces, they can use from the smallest outcomes. 
+
+Top - down: 
+    problem is broken into sub-problems and sloved, cached, always checking if results already been solved 
+
+DIFFERENCES:
+    - In bottom-up the programmer has to select what values get computed first & decide the order of calculation
+    - Top down, . The problem is broken into sub problems, these sub problems are solved and the solutions remembered, 
+        in case they need to be solved again. 
+
+
+https://iorilan.medium.com/after-solved-1000-leetcode-medium-level-i-found-these-patterns-dynamic-programming-205226223f4e
