@@ -16,6 +16,9 @@
 """
 
 
+
+
+import math
 def isValidSubsequence(array, sequence):
     # 0(n) time, 0(1) space, where n is length of array
     # Two pointers, let l = sequence, r = array
@@ -312,3 +315,71 @@ def spiralTraverse(array):
         endCol -= 1
 
     return result
+
+
+def longestPeak(array):
+    ''' Find the longest peak in an array. A peak is where the adjacents element is strictly increasing
+    until they reach a tip(highest value in the peak), at which point they become strictly decreasing.
+
+    The tip of a peak, is at the point where 
+    it was increasing and then decreases.  
+             l     p          r
+    [1,2,3,3,4,0, 10, 6,5,-1,-3,2,3] -> 0,10,6,5,-1,-3, maxPeak= 6, 
+    there is a peak happening at 10
+    '''
+    maxPeak = 0
+    i, end = 1, len(array)-1
+
+    while i < end:
+        isPeak = array[i-1] < array[i] and array[i] > array[i+1]
+        if not isPeak:
+            i += 1
+            continue
+        # left
+        leftIdx = i - 2
+        while leftIdx >= 0 and array[leftIdx] < array[leftIdx + 1]:
+            leftIdx -= 1
+        # right
+        rightIdx = i + 2
+        while rightIdx < len(array) and array[rightIdx] < array[rightIdx - 1]:
+            rightIdx += 1
+
+        currentPeak = rightIdx - leftIdx - 1
+        maxPeak = max(maxPeak, currentPeak)
+
+        i = rightIdx
+    return maxPeak
+
+
+"""Question 12- A function that returns an array of the same length, where each element in the output array
+is equal to the product of every other number in the input array
+[5,1,4,2] => [8, 40, 10, 20]
+"""
+
+
+def arrayOfProducts(array):
+    output = []
+    for i in range(len(array)):
+        output.append(math.prod(array[0:i] + array[i+1:]))
+    return output
+
+
+"""Question 13 - First duplicate value - Given an array of integers between 1 and n, where n is the length of the array, return the number
+that is duplicated first.
+[2,1,5,2,3,3,4], 2 appeared first
+Method 1 - 0(n^2) time 0(1) space
+Method 2 - 0(n) time 0(n) space, Using hashSet or hashMap
+Method 3 - 0(n) time, 0(1) space - Mark each element to negative by their index, the next time you encounter a negative value at the index that
+the integer maps to you know that you've already seen that interger
+"""
+
+
+def firstDuplicateValue(array):
+    for n in array:
+        # get index
+        absN = abs(n)
+        if array[absN - 1] < 0:
+            return absN
+        array[absN-1] *= -1
+
+    return -1
