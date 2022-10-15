@@ -383,3 +383,61 @@ def firstDuplicateValue(array):
         array[absN-1] *= -1
 
     return -1
+
+
+""" Question 14 - Merge-overlapping intervals 
+[[1,2], [3,5], [4,7], [6,8], [9,10]] -> [[1,2], [3,8], [9,10]] 
+[[1,4], [6,9], [5, 10]] -> [1,10]
+"""
+
+
+def mergeOverlappingIntervals(intervals):
+    # 0(nlogn) time and 0(n) space
+
+    intervals.sort(key=lambda x: x[0])
+    output = []
+    idx = 0
+
+    while idx < len(intervals):
+        if not output:
+            output.append(intervals[idx])
+        else:
+            if intervals[idx][0] <= output[-1][1]:
+                output[-1][1] = max(intervals[idx][1], output[-1][1])
+            else:
+                output.append(intervals[idx])
+
+        idx += 1
+
+    return output
+
+
+""" Question 15 - 4sum
+- Like 3 sum, a double for-loop before searching with pointers.
+    - 0(n^3) time, 0(n^2) space
+"""
+
+
+def fourNumberSum(array, targetSum):
+
+    output = []
+    array.sort()
+
+    for i in range(len(array)-3):
+        for j in range(i+1, len(array)-2):
+
+            l, r = j+1, len(array)-1
+
+            while l < r:
+                curr = [array[i], array[j], array[l], array[r]]
+                currSum = sum(curr)
+                if currSum == targetSum:
+                    if curr not in output:
+                        output.append(curr)
+                    l += 1
+                    r -= 1
+                elif currSum > targetSum:
+                    r -= 1
+                elif currSum < targetSum:
+                    l += 1
+    return output
