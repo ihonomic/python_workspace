@@ -1,5 +1,3 @@
-import numbers
-
 
 class BinarySearchTreeNode:
     def __init__(self, data) -> None:
