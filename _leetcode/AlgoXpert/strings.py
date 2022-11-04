@@ -50,13 +50,13 @@ def runLengthEncoding(string):
 
     for i in range(1, len(string)):
         curr = string[i]
-        prev = string[i-1]
+        prev = string[i - 1]
         if curr == prev and count < 9:
             count += 1
         else:
             res += str(count) + prev
             count = 1
-    res += str(count) + string[i]           # NOTE: Handle Last case
+    res += str(count) + string[i]  # NOTE: Handle Last case
     return res
 
 
@@ -112,7 +112,7 @@ def longestPalindromicSubstring(string):
     # 0(n^3) time | 0(n) space
 
     def is_palindrome(s):
-        l, r = 0, len(s)-1
+        l, r = 0, len(s) - 1
         while l < r:
             if s[l] != s[r]:
                 return False
@@ -124,8 +124,8 @@ def longestPalindromicSubstring(string):
     res = string[0]  # initialize
 
     for i in range(len(string)):
-        for j in range(i+1, len(string)):
-            substring = string[i:j+1]
+        for j in range(i + 1, len(string)):
+            substring = string[i:j + 1]
             if is_palindrome(substring) and len(substring) > len(res):
                 res = substring
     return res
@@ -148,8 +148,8 @@ def longestPalindromicSubstring(string):
     sliceIndexes = [0, 1]
 
     for i in range(1, len(string)):
-        even = getLongestPalindromeFrom(string, i-1, i)
-        odd = getLongestPalindromeFrom(string, i-1, i+1)
+        even = getLongestPalindromeFrom(string, i - 1, i)
+        odd = getLongestPalindromeFrom(string, i - 1, i + 1)
 
         # Return the greater difference
         longest = max(even, odd, key=lambda x: x[1] - x[0])
@@ -194,10 +194,10 @@ def groupAnagrams(words):
     return [[strs[i] for i in arr] for _, arr in hashMap.items()]
 
 
-""" Question 7 - Given a string of digits only, Return an array of possible IP addresses. Such that each part of the IP is has no
+""" Question 7 - Given a string of digits only, Return an array of possible IP addresses. Such that each part of the IP  has no
     trailing 0 and is in the range 0 - 255. 
     e.g: 
-    METHOD 1 - 0(time) | 0(1) space  NOTE: Because the size of the input is at most 12, as stated in the question. As it will always occupy 32bits
+    METHOD 1 - 0(n) time  | 0(1) space  NOTE: Because the size of the input is at most 12, as stated in the question. As it will always occupy 32bits
 
 """
 
@@ -205,6 +205,7 @@ def groupAnagrams(words):
 def validIPAddresses(string):
     """
     """
+
     #   Helper function
     def isValidPart(substring):
         if int(substring) > 255:
@@ -214,11 +215,11 @@ def validIPAddresses(string):
 
     # -----
     validIps = []
-    for i in range(1, len(string)-2):
+    for i in range(1, len(string) - 2):
 
-        for j in range(i+1, len(string)-1):
+        for j in range(i + 1, len(string) - 1):
 
-            for k in range(j+1, len(string)):
+            for k in range(j + 1, len(string)):
 
                 one = string[0:i]
                 two = string[i:j]
@@ -248,7 +249,7 @@ def reverseWordsInString(string):
 
     #   Helper function to reverse
     def reverseList(array):
-        left, right = 0, len(array)-1
+        left, right = 0, len(array) - 1
         while left < right:
             array[left], array[right] = array[right], array[left]
             left += 1
@@ -282,3 +283,115 @@ def reverseWordsInString(string):
     # Reverse list
     reverseList(newString)
     return ''.join(newString)
+
+
+"""Question 9 - Write a func that takes an array of words and returns the smallest array of characters needs to form 
+    all the words. They dont need to be in a particular order.
+    e.g: words = ["your", "you", "or", "yo"] --> ["y", "r", "o", "u"] 
+    METHOD 1:   0(n * c) time, 0(r) space 
+        Count the current character in a word and append if it's smaller than that those saved already
+"""
+
+
+def minimumCharactersForWords(words):
+    # 0(n * c) time, 0(r) space
+    if not words:
+        return []
+
+    res = list(words[0])
+
+    for word in words[1:]:
+        for char in word:
+            if res.count(char) < word.count(char):  # You can also use a counter here.
+                res.append(char)
+    return res
+
+
+""" Question 10 - Write a func that takes in a string and returns the longest substring without duplicate characters
+    e.g : string = "clementisacap" --> "mentisac"
+    METHOD 1:  0(n) time, 0(1) time
+        - Two pointers. 
+            Checking each substrings, count its length and compare with previous max if there are no duplicates
+"""
+
+
+def longestSubstringWithoutDuplication(string):
+    if len(string) < 2:
+        return string
+
+    res = ""
+    left = 0
+    right = left + 1
+
+    while left < len(string):
+        while right < len(string) and string[right] not in string[left:right]:
+            res = max([res, string[left:right + 1]], key=len)
+            right += 1
+        left += 1
+    return res
+
+
+""" Question 11 - Underscorify Substring. Write a func that takes a string and substring, for every substring in string, 
+    place an underscore before and after it. 
+    Also take note of substrings that sit side by side or overlaps, consider as a single case.
+    e.g : string = "testthis is a testtest to see if testestest it works", substring = "test" 
+            --> "_test_this is a _testtest_ to see if _testestest_ it works"
+    METHOD 1: 0(n) time, 0(n) space
+"""
+
+
+def underscorifySubstring(string, substring):
+    # 1. Find the start and end indexes of each cases of the substrings (2D array)
+    arrayOfIndexes = []
+    for i in range(len(string)):
+        start = i
+        end = i + len(substring)
+        if string[start:end] == substring:
+            arrayOfIndexes.append([start, end - 1])
+
+    # print(arrayOfIndexes)
+    if not arrayOfIndexes:
+        return string
+
+    # 2. Collapse the 2D array to remove overlapping indexes or those sitting side by side
+    collapseIndexes = [arrayOfIndexes[0]]
+    for i in range(1, len(arrayOfIndexes)):
+        lastSaved = collapseIndexes[-1]
+        incoming = arrayOfIndexes[i]
+        if incoming[0] - lastSaved[1] < 2:
+            lastSaved[1] = incoming[1]
+        else:
+            collapseIndexes.append(arrayOfIndexes[i])
+
+    # print(collapseIndexes)
+
+    indexes = []
+    for i in collapseIndexes:
+        indexes.append(i[0])
+        indexes.append(i[1])
+
+    print(indexes)
+
+    # 3. create new string by inserting underscore before the start and after the end of the 2D indexes
+    newString = ""
+    for i, s in enumerate(string):
+        if i in indexes and indexes.count(i) == 1:
+            # is even
+            is_even = indexes.index(i) % 2
+            if not is_even:
+                newString += '_'
+                newString += s
+            else:
+                newString += s
+                newString += '_'
+        elif i in indexes and indexes.count(i) > 1:
+            newString += f'_{s}_'
+        else:
+            newString += s
+
+    return newString
+
+
+if __name__ == "__main__":
+    print(longestSubstringWithoutDuplication("clementisacap"))
+    ...
