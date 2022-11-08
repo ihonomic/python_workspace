@@ -602,7 +602,7 @@ def patternMatcher(pattern, string):
             potentialMatch = map(lambda char: x, newPattern)
             if string == "".join(potentialMatch):
                 return [x, ""] if not didSwitch else ["", x]
-            
+
     return []
 
 
