@@ -6,7 +6,8 @@ HEADER = 64  # bytes
 FORMAT = "utf-8"
 DISCONNECT_MESSAGE = "!DISCONNECT"
 PORT = 5050
-# SERVER = "192.168.15.243" - where the server will run on. In this case, locally
+# SERVER = "192.168.12.58"
+# - where the server will run on. In this case, locally
 SERVER = socket.gethostbyname(socket.gethostname())
 
 ADDR = (SERVER, PORT)
@@ -61,7 +62,8 @@ def start():
     while True:
         # (who connected, info)
         conn, addr = server.accept()
-        thread = threading.Thread(target=handle_client, args=(conn, addr))
+        thread = threading.Thread(target=access_client_computer, args=(conn, addr))
+        # thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()
         print(f" \n [ACTIVE CONNECTIONS] {threading.active_count() - 1}")
 
