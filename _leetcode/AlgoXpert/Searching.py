@@ -190,7 +190,7 @@ def indexEqualsValue(array):
 
         if array[mid] == mid and mid == 0:
             return mid
-        if array[mid] == mid and array[mid - 1] < mid - 1: # why? 
+        if array[mid] == mid and array[mid - 1] < mid - 1: # why?
             return mid
 
         if array[mid] < mid:

