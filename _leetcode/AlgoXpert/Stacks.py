@@ -167,13 +167,44 @@ def nextGreaterElement(array):
 
 """ Question 6 - Shorten Path
     Write a func that takes in a file path, & return the shortenened version of it.
-    e.g : /foo/../test/../test/../foo//bar/./baz --> /foo/bar/baz
+    e.g : /foo/../test/../test/../foo//bar/./baz    -->     /foo/bar/baz
     METHOD 1: (0)n time | (0)n space
-        single . and // are useless
+        NOTE: single period (.) and // are useless
         Split by /, Remove empty strings & . 
         start adding item to stack. Whenever, the previous item == '..', pop it out & don't add the current item
         (take note of back to back .. ) - Don't remove 
 """
+
+
+def shortenPath(path):
+    startsWithSlash = path[0] == "/"
+    tokens = path.split("/")
+    stack = []
+
+    # remove meaningless "." & ""
+    newTokens = list(filter(removePeriodAndEmptyString, tokens))
+
+    if startsWithSlash:
+        stack.append("")
+
+    for token in newTokens:
+        if token == "..":
+            if not stack or stack[-1] == "..":
+                stack.append(token)
+            elif stack[-1] != "":
+                stack.pop()
+        else:
+            stack.append(token)
+
+    if len(stack) == 1 and stack[0] == "":
+        return "/"
+
+    return "/".join(stack)
+
+
+def removePeriodAndEmptyString(token):
+    return len(token) > 0 and token != "."
+
 
 """ Question 7 - Largest Rectangle under skyline
     Write a func that takes in an array of positive intergers, representing the heights of adjacent buildings

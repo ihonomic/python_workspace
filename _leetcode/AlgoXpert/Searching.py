@@ -1,0 +1,131 @@
+""" Question 1 - Binary search
+    Write a func that takes a sorted array & a target and then return the index of the target if its in the array
+    otherwise return -1
+    e.g : array=[0, 1, 21, 33, 45, 45, 61, 71, 72, 73], target=33 --> 3
+    METHOD: 0(logn) time | 0(1) space
+"""
+
+
+def binarySearch(array, target):
+    left, right = 0, len(array) - 1
+    while left <= right:
+        mid = left + (right - left) // 2
+
+        if array[mid] == target:
+            return mid
+
+        if array[mid] < target:
+            left += 1
+        else:
+            right -= 1
+
+    return -1
+
+
+""" Question 2 - Find 3 largest Number 
+    Write a func that takes in an array & return the three largest number in an array.  Don't use sort()
+    e.g : array=[141, 1, 17, -7, -17, -27, 18, 541, 8, 7, 7] --> [18, 141, 541]
+    METHOD: 0(n) time | 0(n) space
+        Initialize to negative infinity, During the loop, shift values 
+"""
+
+
+def findThreeLargestNumbers(array):
+    threeLargest = [float("-inf")] * 3
+    for num in array:
+        if num > threeLargest[2]:
+            threeLargest[0] = threeLargest[1]
+            threeLargest[1] = threeLargest[2]
+            threeLargest[2] = num
+        elif num > threeLargest[1]:
+            threeLargest[0] = threeLargest[1]
+            threeLargest[1] = num
+        elif num > threeLargest[0]:
+            threeLargest[0] = num
+
+    return threeLargest
+
+
+""" Question 3 - Search in a sorted Matrix 
+    Write a func that 
+    e.g : 
+    METHOD: 
+"""
+
+"""Question 4 - Shifted Binary Search 
+    Write a func that takes in a rotated sorted array and a target and return the 
+    index of the target if found, otherwise return -1 
+    e.g : array=[45, 61, 71, 72, 73, 0, 1, 21, 33, 37] target=33  --> 8
+    METHOD: 0(logn) time | 0(1) space
+"""
+
+
+def shiftedBinarySearch(array, target):
+    left, right = 0, len(array) - 1
+    while left <= right:
+
+        #   Does it contain duplicates(Don't do this if DISTINCT)
+        while left < right and array[left] == array[left + 1]:
+            left = left + 1
+        while left < right and array[right] == array[right - 1]:
+            right = right - 1
+
+        mid = left + (right - left) // 2
+
+        if array[mid] == target:
+            return mid
+
+        if array[left] <= array[mid]:
+            # Does the target fall within the bounds
+            if array[left] <= target <= array[mid]:
+                right -= 1
+            else:
+                left += 1
+        else:
+            if array[mid] <= target <= array[right]:
+                left += 1
+            else:
+                right -= 1
+    return -1
+
+
+""" Question 5 - Search for range 
+    Write a func that accepts a sorted array and a target, and return the start and end index in an array but if target
+    doesn't exist in the array return [-1, -1] 
+    e.g : array=[0, 1, 21, 33, 45, 45, 45, 45, 45, 45, 61, 71, 73] target=45 --> [4, 9]
+    METHOD: 0(logn) | 0(1)
+        # Look for a number larger than the target. so that the found number will be  -1 away from the actual target
+"""
+
+
+def searchForRange(array, target):
+    start = search(array, target)
+    end = search(array, target + 1) - 1
+
+    if start <= end:
+        return [start, end]
+    return [-1, -1]
+
+
+def search(array, target):
+    left, right = 0, len(array) - 1
+    while left <= right:
+        mid = left + (right - left) // 2
+        if target <= array[mid]:
+            right = mid - 1
+        else:
+            left = mid + 1
+    return left
+
+
+""" Question 6 - Quick Select 
+    Write a func that 
+    e.g : 
+    METHOD: 
+"""
+
+""" Question 7 - Index equals value 
+    Write a func that 
+    e.g : 
+    METHOD: 
+"""
