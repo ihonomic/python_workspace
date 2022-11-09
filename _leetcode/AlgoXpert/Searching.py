@@ -26,7 +26,7 @@ def binarySearch(array, target):
     Write a func that takes in an array & return the three largest number in an array.  Don't use sort()
     e.g : array=[141, 1, 17, -7, -17, -27, 18, 541, 8, 7, 7] --> [18, 141, 541]
     METHOD: 0(n) time | 0(n) space
-        Initialize to negative infinity, During the loop, shift values 
+        Initialize to negative infinity, During the loop, shift values and update
 """
 
 
@@ -47,10 +47,43 @@ def findThreeLargestNumbers(array):
 
 
 """ Question 3 - Search in a sorted Matrix 
-    Write a func that 
-    e.g : 
-    METHOD: 
+    Given a two dimensional matrix, each row and column is sorted (distinct integers) and a target. 
+    The matrix doesn't necessary have the same height and width. Return the index of the target row & col
+    if target not in matrix, return [-1, -1]
+    e.g : matrix=[
+        [1, 4, 7, 12, 15, 1000],
+        [2, 5, 19, 31, 32, 1001],
+        [3, 8, 24, 33, 35, 1002],
+        [40, 41, 42, 44, 45, 1003],
+        [99, 100, 103, 106, 128, 1004]
+    ] target=44 --> [3, 3]
+    METHOD 1: 0(n * m) time | 0(1) space
+    METHOD 2 : 0(n +m) time | 0(1) space
 """
+
+
+def searchInSortedMatrix(matrix, target):
+    # 0(n * m) time | 0(1) space
+    for idx, row in enumerate(matrix):
+        if target in row:
+            return [idx, row.index(target)]
+    return [-1, -1]
+
+
+def searchInSortedMatrix(matrix, target):
+    # 0(n +m) time | 0(1) space
+    row = 0
+    col = len(matrix[0]) - 1
+    while row < len(matrix) and col >= 0:
+        if matrix[row][col] > target:
+            col -= 1
+        elif matrix[row][col] < target:
+            row += 1
+        else:
+            return [row, col]
+
+    return [-1, -1]
+
 
 """Question 4 - Shifted Binary Search 
     Write a func that takes in a rotated sorted array and a target and return the 
@@ -119,13 +152,49 @@ def search(array, target):
 
 
 """ Question 6 - Quick Select 
-    Write a func that 
-    e.g : 
-    METHOD: 
+    Write a func that takes an array of integers and return the kth smallest in the array
+    e.g : array=[8,5,2,9,7,6,3], k =3 --> 5
+    METHOD 1: 0(nlogn) time | 0(1) space
+    METHOD 2: 
 """
 
+
+def quickselect(array, k):
+    k = k % len(array)
+    array.sort()
+    return array[k - 1]
+
+
 """ Question 7 - Index equals value 
-    Write a func that 
-    e.g : 
-    METHOD: 
+    Write a func that takes in a sorted array and return the first element that equals it's index
+    e.g : array=[-5, -3, 0, 3, 4, 5, 9] --> 3
+    METHOD 1:  0(n) time | 0(1) space
+    METHOD 2: 0(logn) time | 0(1) space
 """
+
+
+def indexEqualsValue(array):
+    # 0(n) time | 0(1) space
+    for idx, num in enumerate(array):
+        if num == idx:
+            return idx
+    return -1
+
+
+def indexEqualsValue(array):
+    # 0(logn) time | 0(1) space
+    left, right = 0, len(array) - 1
+
+    while left <= right:
+        mid = left + (right - left) // 2
+
+        if array[mid] == mid and mid == 0:
+            return mid
+        if array[mid] == mid and array[mid - 1] < mid - 1: # why? 
+            return mid
+
+        if array[mid] < mid:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1
