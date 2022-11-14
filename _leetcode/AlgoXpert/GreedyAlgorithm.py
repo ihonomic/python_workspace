@@ -53,5 +53,73 @@ def classPhotos(redShirtHeights, blueShirtHeights):
 
 
 """ Question 3 - Tandem Bicycle
-    Method 1: 
+    A tandem bicycle is pedalled by two people, but the person that pedals faster dictates the speed of the bicycle.
+    If A pedals at the rate of 5, and B pedals at the rate of 4. Bicycle speed = 5
+    Given 2 teams of arrays (same length) of riders, and a fastest flag. If fastest == True, return the maximum total
+    tandem speed, otherwise return the minimum total speed  
+    e.g : redShirtSpeeds=[5, 5, 3, 9, 2] blueShirtSpeeds=[3, 6, 7, 2, 1] fastest=True --> 32
+    Method 1: 0(nlogn) time | 0(1) time
+        - To obtain the maximum = sum the maximum of each idx from both array
+        - To obtain the minimum = sum the maximum and the reverse minimum. Why does one has to be reverse? To cause a 
+        big gap.
 """
+
+
+def tandemBicycle(redShirtSpeeds, blueShirtSpeeds, fastest):
+    redShirtSpeeds.sort()
+    blueShirtSpeeds.sort(reverse=fastest)
+    return sum(max(red, blue) for red, blue in zip(redShirtSpeeds, blueShirtSpeeds))
+
+
+""" Question 4 - Task Assignments
+    Given k-number of workers & an even array of tasks durations. Each worker is expected to complete 2 tasks, 
+    return the optimal assignment of tasks to each worker such that the tasks are completed as fast as possible
+    e,g : k=3 tasks=[1, 3, 5, 3, 1, 4]
+    Method 1: 0(nlogn) time | 0(n) space
+         Returns the optimal assignment of tasks.
+        Avoid pairing long tasks together. Pair the shortest-duration tasks with the longest-
+        duration tasks'. It would make sense to pair one low tasks with a higher one
+        start by remembering the original indices of tasks.
+        sort the tasks array in ascending order.
+"""
+
+
+def taskAssignment(k, tasks):
+
+    tasksPairIndices = [(idx, task) for idx, task in enumerate(tasks)]
+
+    tasksPairIndices.sort(key=lambda item: item[1])
+
+    # the lowest duration tasks are at the beginning & the largest at the end
+    # so pair them. It would make sense to pair one low tasks with a higher one
+    pairTasksResult = []
+    leftIdx, rightIdx = 0, len(tasksPairIndices) - 1
+    while leftIdx < rightIdx:
+        pairTasksResult.append([tasksPairIndices[leftIdx][0], tasksPairIndices[rightIdx][0]])
+        leftIdx += 1
+        rightIdx -= 1
+
+    return pairTasksResult
+
+
+""" Question 5 - Valid starting city
+    Different cities connected in circular, find a valid starting city, where your car is filled with fuel and takes you 
+    to consequtives cities for refill  & later arrive at the starting city with 0 or more fuel left.
+    NOTE: Your fuel must NOT be exhausted on the way.
+    
+    distances[i] is the distance from the next [i+1]. Last city is connected to the first 
+    fuel[i] is the total fuel available at city[i]
+    mpg(mile per gallon) is the total number of miles your car can travel per gallon of fuel 
+    Return the index of the valid starting city. 
+    
+    e.g: distances=[5, 25, 15, 10, 15] fuel=[1, 2, 1, 0, 3] mpg=10  --> 4
+    
+    Method 1: 0(n^2) time | 0(1) space
+    Method 2: 0(n) time | 0(1) space
+        The trick here,:  start at the city where you'll have the most minimum amount of gas. 
+        By intuition, a more valid starting city is that after the city with the most scarcity of fuel
+        From our example, city 3 has no fuel. So it's best to start at city 4. Which will be more logical to gather 
+        enough fuel from other city to overcome the most  scarce city before reaching the starting point city. 
+            - So as soon as we find the most scarce city [i], the next city [i+1] is the valid starting city
+"""
+
