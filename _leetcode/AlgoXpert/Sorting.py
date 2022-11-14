@@ -192,12 +192,69 @@ def swap(i, j, array):
 """ Question 7: Radix sort 
      Method :  0(d * (n+b)) time | 0(n + b) space - where n is the length of the input array,
         d is the max number of digits, and b is the base of the numbering system used
-    
+    - Radix sort behaves differently when array contains negative numbers (disadvantage) 
+    because it considers the digits (tenth, hundreth, thousandth of numbers )
+    - It requires that we know the maximum number length
+    Example: [8762, 654, 3008, 345, 87, 65, 234, 12, 2]
+    - Initialize a count array that contains default zeros of length base. Since we're dealing with base10,
+                    0,1,2,3,4,5,6,7,8,9
+        count = [0,0,0,0,0,0,0,0,0,0]
+    - Initialize a sorted array that contains default zeros of length of input array. e.g 9 elements.
+        sorted = [0,0, 0,0,0,0,0,0,0]
+    - In the count array, increment the counts index by the digit frequency. 
+                    0,1,2,3,4,5,6,7,8,9
+        count = [0,0,3,0,2,2,0,1,1,0]
+        Now, starting at idx 1, sum adjacent numbers until the end
+                    0,1,2,3,4,5,6,7,8,9
+        count = [0,0,3,3,5,7,7,8,9,9]
+        Now, loop through the input array, going backwards ( inorder to main the previously sorted)
+            In the initialized sorted array, the count array tells us where to place the current element, 
+            by reducing the frequency in the count, the leftover frequency is the index we need to position the 
+                current element in the sorted array.
+        Now, update the original array
 """
 
 
 def radixSort(array):
-    ...
+    if not array:
+        return array
+
+    maxNumber = max(array)
+
+    digit = 0
+    while maxNumber:
+        countingSort(array, digit)
+        digit += 1
+        maxNumber = maxNumber // 10
+    return array
+
+
+def countingSort(array, digit):
+    countArray = [0] * 10
+    sortedArray = [0] * len(array)
+
+    # count the digit frequencies
+    digitColumn = 10 ** digit
+    for num in array:
+        # Extract the number at index
+        countIndex = (num // digitColumn) % 10
+        countArray[countIndex] += 1
+
+    # sum adjacent frequencies
+    for idx in range(1, len(countArray)):
+        countArray[idx] += countArray[idx-1]
+
+    # fill the sorted array with reverse from the last known array
+    for idx in range(len(array)-1, -1, -1):
+        countIndex = (array[idx] // digitColumn) % 10
+        # substract the frequency
+        countArray[countIndex] -= 1
+        sortedIndex = countArray[countIndex]
+        sortedArray[sortedIndex] = array[idx]
+
+    # update the original input array
+    for idx in range(len(array)):
+        array[idx] = sortedArray[idx]
 
 
 """ Question 8: Merge sort 
@@ -253,3 +310,30 @@ def merge_two_sorted(a, b, arr):
         arr[k] = b[j]
         j += 1
         k += 1
+
+
+""" Question 9: Count Inversion 
+    Write a func that takes in an array, and returns the number of inversions in the array.
+    An inversion occurs if for any valid indices i j => i < j and array[i] > array[j]
+    Method 1: 0(n^2) time | 0(1) space
+        Compare every element with its post-ceding values
+    Method 2: 0(nlogn) time | 0(n) space
+        Using Merge sort, when current value in the left hand array is larger than right, then every values
+        after it plus it is inverted. count all as inverted ,
+"""
+
+
+def countInversions(array):
+    # 0(n^2) time | 0(1) space
+    countInversion = 0
+    for i in range(len(array)-1):
+        for j in range(i+1, len(array)):
+            if array[i] > array[j]:
+                countInversion += 1
+    return countInversion
+
+
+def countInversions(array):
+    #  0(nlogn) time | 0(n) space
+
+    return
