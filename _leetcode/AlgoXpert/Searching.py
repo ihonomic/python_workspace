@@ -155,14 +155,51 @@ def search(array, target):
     Write a func that takes an array of integers and return the kth smallest in the array
     e.g : array=[8,5,2,9,7,6,3], k =3 --> 5
     METHOD 1: 0(nlogn) time | 0(1) space
-    METHOD 2: 
+    METHOD 2:  Quick-Sort technique: 0(n) time | 0(1) space
+        Quick sort the array but don;t call recursively, instead try to find the position
 """
 
 
 def quickselect(array, k):
+    #  0(nlogn) time | 0(1) space
     k = k % len(array)
     array.sort()
     return array[k - 1]
+
+
+def quickselect(array, k):
+    #  0(n) time | 0(1) space
+    return quickSortHelper(array, 0, len(array) - 1, k - 1)
+
+
+def quickSortHelper(array, startIdx, endIdx, position):
+    while True:
+        if startIdx >= endIdx:
+            pass
+
+        pivotIdx = startIdx
+        leftIdx = startIdx + 1
+        rightIdx = endIdx
+        while rightIdx >= leftIdx:
+            if array[leftIdx] > array[pivotIdx] > array[rightIdx]:
+                swap(leftIdx, rightIdx, array)
+            if array[leftIdx] < array[pivotIdx]:
+                leftIdx += 1
+            if array[rightIdx] > array[pivotIdx]:
+                rightIdx -= 1
+        swap(pivotIdx, rightIdx, array)
+
+        #  TAKE NOTE
+        if rightIdx == position:
+            return array[rightIdx]
+        elif rightIdx < position:
+            startIdx = rightIdx + 1
+        else:
+            endIdx = rightIdx - 1
+
+
+def swap(i, j, array):
+    array[i], array[j] = array[j], array[i]
 
 
 """ Question 7 - Index equals value 
@@ -190,7 +227,7 @@ def indexEqualsValue(array):
 
         if array[mid] == mid and mid == 0:
             return mid
-        if array[mid] == mid and array[mid - 1] < mid - 1: # why?
+        if array[mid] == mid and array[mid - 1] < mid - 1:  # why?
             return mid
 
         if array[mid] < mid:
