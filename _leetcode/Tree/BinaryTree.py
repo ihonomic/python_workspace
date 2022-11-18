@@ -6,6 +6,7 @@ class BinarySearchTreeNode:
         self.right = None
 
     def add_child(self, data):
+        # Don't add duplicate
         if data == self.data:
             return
 

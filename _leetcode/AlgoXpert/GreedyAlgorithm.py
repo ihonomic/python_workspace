@@ -123,3 +123,16 @@ def taskAssignment(k, tasks):
             - So as soon as we find the most scarce city [i], the next city [i+1] is the valid starting city
 """
 
+
+def validStartingCity(distances, fuel, mpg):
+    # 0(n) time | 0(1) space
+    currentSum = 0
+    mostNegativeCity = 0
+    validStartingIdx = 0  # this is set to the index after the most negative sum
+    for idx in range(len(distances)):
+        currentSum += fuel[idx] * mpg - distances[idx]
+        if currentSum < mostNegativeCity:
+            mostNegativeCity = currentSum
+            validStartingIdx = (idx + 1) % len(distances)
+    return validStartingIdx
+

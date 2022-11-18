@@ -441,3 +441,55 @@ def fourNumberSum(array, targetSum):
                 elif currSum < targetSum:
                     l += 1
     return output
+
+
+""" Question 16 - Subarray sort
+    Given an array, return the start and end indexes of the smallest subarray from the input that need to be sorted to
+    make the entire array sorted. If the entire is already sorted, return [-1, -1]
+    e.g : [0,1,2,5,4,7,3,6,8,9],--> [3, 7]
+    The subarray =[5,4,7,3,6] need to be sorted to make the entire array sorted
+    Method 1: 0(n) time | 0(1) space
+        Note: if one number is found unsorted, that means two is unsorted, 
+        The subarray is dependent on the values that are out of order.
+            (where the min and max values are suppose to be)
+    - The idea is to find the minimum and maximum value of that are out of order
+    - Find the position index of where both the minimum value and maximum value are
+        suppose to be
+"""
+
+
+def subarraySort(array):
+
+    minOutOfOrder = float("inf")
+    maxOutOfOrder = float("-inf")
+
+    for i in range(len(array)):
+        num = array[i]
+        # A number is out of order if the prev is greater than it or it is greater than the previous
+        if isOutOfOrder(i, num, array):
+            minOutOfOrder = min(minOutOfOrder, num)
+            maxOutOfOrder = max(maxOutOfOrder, num)
+
+    # check if any outofOrder was found
+    if minOutOfOrder == float("inf"):
+        return [-1, -1]
+
+    # Now, find the position index
+    # where the minumum and maximum out of order is suppose to be
+    subarrayMinIdx = 0
+    while minOutOfOrder >= array[subarrayMinIdx]:
+        subarrayMinIdx += 1
+
+    subarrayMaxIdx = len(array) - 1
+    while maxOutOfOrder <= array[subarrayMaxIdx]:
+        subarrayMaxIdx -= 1
+
+    return [subarrayMinIdx, subarrayMaxIdx]
+
+
+def isOutOfOrder(i, num, array):
+    if i == 0:
+        return num > array[i + 1]
+    if i == len(array) - 1:
+        return num < array[i - 1]
+    return array[i - 1] > num or num > array[i + 1]
