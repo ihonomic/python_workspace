@@ -189,8 +189,8 @@ def validateBstHelper(tree, leftParent, rightParent):
     if tree.value < leftParent or tree.value >= rightParent:  # why? - Value can never be less than or greater than Inf
         return False
 
-    isLeftValid = validateBstHelper(tree.left, leftParent, tree.value,)
-    isRightValid = validateBstHelper(tree.right, tree.value, rightParent,)
+    isLeftValid = validateBstHelper(tree.left, leftParent, tree.value, )
+    isRightValid = validateBstHelper(tree.right, tree.value, rightParent, )
 
     return isLeftValid and isRightValid
 
@@ -240,7 +240,7 @@ def postOrderTraverse(tree, array):
 
 
 def minHeightBst(array):
-    return constructMinHeightBST(array, 0, len(array)-1)
+    return constructMinHeightBST(array, 0, len(array) - 1)
 
 
 def constructMinHeightBST(array, startIdx, endIdx):
@@ -249,8 +249,8 @@ def constructMinHeightBST(array, startIdx, endIdx):
 
     midIdx = startIdx + (endIdx - startIdx) // 2
     bst = BST(array[midIdx])  # Insert the middle Node every time.
-    bst.left = constructMinHeightBST(array, startIdx, midIdx-1)
-    bst.right = constructMinHeightBST(array, midIdx+1, endIdx)
+    bst.left = constructMinHeightBST(array, startIdx, midIdx - 1)
+    bst.right = constructMinHeightBST(array, midIdx + 1, endIdx)
     return bst
 
 
@@ -344,7 +344,6 @@ class BST:
 
 
 def reconstructBst(preOrderTraversalValues):
-
     # start with the root node
     root = BST(preOrderTraversalValues[0])
 
@@ -384,7 +383,6 @@ def reconstructBst(preOrderTraversalValues):
 
 
 def sameBsts(arrayOne, arrayTwo):
-
     # if the nodes were both empty/ You've traversed to the end
     if len(arrayOne) == len(arrayTwo) and len(arrayOne) == 0:
         return True
@@ -424,7 +422,8 @@ def sameBsts(arrayOne, arrayTwo):
                /     /    /
               2     11   81
     METHOD 1: 0(d) time | 0(1) space
-        
+            - consider nodeOne as parentNode, check if nodeTwo can be found first and the proceed to find nodeThree
+            - Repeat, by considering nodeThree as parentNode
 """
 
 
@@ -436,7 +435,48 @@ class BST:
 
 
 def validateThreeNodes(nodeOne, nodeTwo, nodeThree):
-    # Write your code here.
+    one = nodeOne
+    isTwoFoundInOne = False
+
+    while one:
+        if one and isTwoFoundInOne is False:
+            # Lets search for nodeTwo
+            if one.value == nodeTwo.value:
+                isTwoFoundInOne = True
+            elif one.value < nodeTwo.value:
+                one = one.right
+            else:
+                one = one.left
+        else:
+            # nodeTwo has been found in One, so search for Three
+            if one.value == nodeThree.value:
+                return True
+            elif one.value < nodeThree.value:
+                one = one.right
+            else:
+                one = one.left
+
+    three = nodeThree
+    isTwoFoundInThree = False
+
+    while three:
+        if three and isTwoFoundInThree is False:
+            # Lets search for nodeTwo
+            if three.value == nodeTwo.value:
+                isTwoFoundInThree = True
+            elif three.value < nodeTwo.value:
+                three = three.right
+            else:
+                three = three.left
+        else:
+            # nodeTwo has been found in Three, so search for One
+            if three.value == nodeOne.value:
+                return True
+            elif three.value < nodeOne.value:
+                three = three.right
+            else:
+                three = three.left
+
     return False
 
 
@@ -454,7 +494,7 @@ def rightSmallerThan(array):
     output = []
     for i in range(len(array)):
         countValidNumbers = 0
-        for j in range(i+1, len(array)):
+        for j in range(i + 1, len(array)):
             if array[j] < array[i]:
                 countValidNumbers += 1
         output.append(countValidNumbers)
