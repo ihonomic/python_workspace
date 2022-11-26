@@ -1,3 +1,45 @@
+""" Question 1 - Branch sums
+    Write a func that
+    e.g:
+    Method:
+"""
+
+
+""" Question 2 - Node depths
+    Write a func that 
+    e.g:
+    Method: 
+"""
+
+
+""" Question 3 - Invert Binary Tree
+    Write a func that 
+    e.g:
+    Method: 
+"""
+
+
+""" Question 4 - Binary Tree Diameter 
+    Write a func that 
+    e.g:
+    Method: 
+"""
+
+
+""" Question 5 - Find Successor
+    Write a func that 
+    e.g:
+    Method: 
+"""
+
+
+""" Question 6 - Height balanced binary Tree
+    Write a func that 
+    e.g:
+    Method: 
+"""
+
+
 """ Question 7 - Max Path sum In Binary Tree
     Write a function that takes in a Binary Tree and return its max path sum.
     NOTE: A path is a collection of connected nodes in a tree, where no node is connected to more than two other nodes;
