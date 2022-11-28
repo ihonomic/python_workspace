@@ -375,9 +375,29 @@ def getListLengthAndLastNode(head):
 
 
 """ Question 9 - LRU Cache
-    Write a func that 
-    e.g:
+    Implement a LRUcache class for a Least recently used cache that does the following in constant time:
+        - Insert key-value pair, insertKeyValuePair()
+        - Retrieveing key-value pair, getValueFromKey()
+        - Retrieveing the most recently used (the most recently inserted or retrieved) key, getMostRecentKey()
+    The class should store a maxSize at initialization, which represent the maximum number of key-value pair the 
+    cache can store. If a new key-value pair is inserted, and the storage has reached its maxSize, 
+    the least recently used cache should be evicted.
+    e.g: LRUCache(3) // Instatialize as the maxSize
+        insertKeyValuePair("b", 2)
+        insertKeyValuePair("a", 1)
+        insertKeyValuePair("c", 3)
+        getMostRecentKey() --> ''c''
+        getValueFromKey("a") --> 1
+        getMostRecentKey() --> ''a' // because a was recently used (retrieved)
+        insertKeyValuePair("d", 4) 
+        getValueFromKey("b") --> None // because hasn't been used recently and was evicted 
+        insertKeyValuePair("a", 5) // a has been replaced 
+        getValueFromKey("a") --> 5
     Method: 
+    - The idea behind LRU cache is that when the maxsize is exhuausted, the saved up item that were 
+    not modified or requested is removed. (Just like the name suggest)
+    - Use a double linkedlist and a dict, whatever value that was recently requested or inserted, set it as the head
+    - If a new pair is entered and the maxSize has reached, remove the tail
 """
 
 
@@ -462,10 +482,67 @@ def reverseSecondHalf(head):
 
 
 """ Question 12 - Zip linkedList
-    Write a func that 
-    e.g:
-    Method: 
+    Write a func that zips the linkedList in place. A zip linkedlist is in the following order:
+    1st node -> last node -> 2nd node -> last-1 node -> 3rd node -> last-2 node 
+    e.g: [1,2,3,4,5,6] --> [1,6,2,5,3,4]
+    Method: 0(n) time | 0(1) space
+         - You can't zip a lists less than 4 nodes. 
+        - Split the lists into 2 halves 
+        - reverse the second half and merge both, consider first half and then second half until both exhusted
 """
+
+
+class LinkedList:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+
+def zipLinkedList(linkedList):
+
+    if linkedList.next is None or linkedList.next.next is None:
+        return linkedList
+
+    firstHalf = linkedList
+    lastHalf = splitLinkedList(linkedList)
+    secondHalf = reverseLinkedList(lastHalf)
+
+    # start merging
+    dummyList = LinkedList(0)
+    dummyTail = dummyList
+
+    while firstHalf is not None and secondHalf is not None:
+        if firstHalf:
+            dummyTail.next = firstHalf
+            firstHalf = firstHalf.next
+            dummyTail = dummyTail.next
+
+        if secondHalf:
+            dummyTail.next = secondHalf
+            secondHalf = secondHalf.next
+            dummyTail = dummyTail.next
+
+    dummyTail.next = None
+    return dummyList.next
+
+
+def splitLinkedList(head):
+    slow, fast = head, head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    return slow
+
+
+def reverseLinkedList(head):
+    prev = None
+    current = head
+    while current:
+        next = current.next
+        current.next = prev
+        prev = current
+        current = next
+    return prev
 
 
 """ Question 13 - Node Swap

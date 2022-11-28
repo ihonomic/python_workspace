@@ -1,36 +1,184 @@
 """ Question 1 - Branch sums
-    Write a func that
-    e.g:
-    Method:
+    Write a func that takes in a BT and returns the total sum of its branches (from leftmost to rightmost)
+    e.g:                        1
+                                /  \
+                              2     3
+                            /  \   / \
+                         4      5 6  7
+                        / \    /
+                       8  9  10                       --> [15, 16,18, 10, 11]
+    // 15: 1+2+4+8
+    // 16: 1+2+4+9
+    // 18:  1+2+5+10
+    // 10:  1+3+6
+    // 11:  1+3+7
+    Method: 0(n) time | 0(n) space
+    - Use a deque, to save the node and running sum, insert the left node last. So that it becomes the first
+    to pop out. Also consider passing down the running sum until a leaf node is found
 """
+
+
+def branchSums(root):
+    queue = [(root, 0)]
+    sumsOfBranch = []
+    while queue:
+        currentNode, runningSum = queue.pop()
+        if currentNode is not None:
+            runningSum += currentNode.value
+            # NOTE: consider the right side first
+            queue.append((currentNode.right, runningSum))
+            queue.append((currentNode.left, runningSum))
+
+            # Have we reach the leaf node
+            if currentNode.left is None and currentNode.right is None:
+                sumsOfBranch.append(runningSum)
+
+    return sumsOfBranch
 
 
 """ Question 2 - Node depths
-    Write a func that 
-    e.g:
-    Method: 
+    Write a func that takes in a BT and returns the sum of its node depth. 
+    NOTE: Depth is the distance between a node and its root
+    e.g:            Tree =  1
+                               /  \
+                             2     3
+                           /  \   /  \
+                         4    5  6   7
+                        / \
+                      8    9                      --> 16
+    // 2 & 3 has a depths of 1 each   -- 2 * 1
+    // 4, 5, 6 & 7 has depths of 2 each --4 *2 
+    // 8 & 9 has depths of 3 each   -- 2*3
+    Method: 0(n) time | 0(h) space
+    - Use a deque, to save the nodes and depths, 
+    - If a node is valid(not None), append the left and right to queue and increment depth by 1
 """
+
+
+def nodeDepths(root):
+    totalDepth = 0
+    queue = [(root, 0)]
+    while queue:
+        currentNode, depth = queue.pop()
+        if currentNode is not None:
+            totalDepth += depth
+            # the appending order doesn't matter
+            queue.append((currentNode.left, depth+1))
+            queue.append((currentNode.right, depth+1))
+
+    return totalDepth
 
 
 """ Question 3 - Invert Binary Tree
-    Write a func that 
-    e.g:
-    Method: 
+    Write a func that takes in a BT and inverts it. That is, it should swap left and rightnodes ( childnodes of parent)
+    e.g:                        tree = 1
+                                         /  \
+                                       2      3
+                                     /   \   /  \
+                                   4     5  6    7 
+                                  /  \
+                                 8   9
+                                 -->                                1
+                                                                   /    \
+                                                                 3        2
+                                                               /  \      /  \
+                                                             7     6   5     4
+                                                                              /  \
+                                                                            9     8
+    Method 1: 0(n) time | 0(n) space
+    Method 2: 0(n) time | 0(d) space
 """
 
 
+def invertBinaryTree(tree):
+    # 0(n) time | 0(n) space
+    queue = [tree]
+    while queue:
+        node = queue.pop(0)
+        if node is not None:
+            swapLeftAndRight(node)
+            queue.append(node.left)
+            queue.append(node.right)
+
+
+def invertBinaryTree(tree):
+    # 0(n) time | 0(d) space
+    if tree is None:
+        return
+    swapLeftAndRight(tree)
+    invertBinaryTree(tree.left)
+    invertBinaryTree(tree.right)
+
+
+def swapLeftAndRight(node):
+    node.left, node.right = node.right, node.left
+
+
 """ Question 4 - Binary Tree Diameter 
-    Write a func that 
-    e.g:
-    Method: 
+    Write a func that takes in a BT and return its diameter. The diameter is defined as the length of its 
+    longest path, even if the path doesn't pass through the root of the tree.
+    
+    A path is a collection of nodes where each node is not connected to more than 2 nodes. The length of the path
+    is the number of edges between the path's first node and it's last node.
+    
+    # The Diameter of a tree is defined as the longest path, (edges) without
+    # interruption
+    e.g:                                        1
+                                                /  \
+                                              3     2
+                                            /  \
+                                          7    4
+                                        /         \
+                                      8            5
+                                     /               \
+                                    9                 6
+                                    ---> 6
+            // There are 6 edges between the first node and the last node of this tree's longest path.
+    Method: 0(n) time 0(h) space
 """
 
 
 """ Question 5 - Find Successor
-    Write a func that 
-    e.g:
-    Method: 
+    Write a func that takes in a BT (where nodes have an additional pointer to their parent node) 
+    and a node contained in the tree, return the given node successor.
+    
+    A node successor is the next node to be visited immediately after the given node when traversing its tree 
+    using inOrder traversal technique. NOTE: A node has no successor if its the last node to be visited in the inOrder 
+    travesal
+    e.g:                    tree =   1
+                                       /  \
+                                     2     3
+                                  /   \
+                                4      5
+                             /
+                           6                           node = 5   --> 1
+    // Using inorder technique 6-4-2-5-1-3 // return 1 because it comes immediately after 5.
+    Method: 0(n) time | 0(n) space
+    Method 2: 0(h) time | 0(1) space
 """
+
+
+def findSuccessor(tree, node):
+    # 0(n) time | 0(n) space
+    inOrderArray = InOrderTraversal(tree, [])
+
+    # find the next node after the given node. (successor)
+    for idx in range(len(inOrderArray)):
+
+        if inOrderArray[idx] == node:
+            # if the node is found but its at the last, return None
+            if idx == len(inOrderArray) - 1:
+                return None
+
+            return inOrderArray[idx + 1]
+
+
+def InOrderTraversal(node, array):
+    if node is not None:
+        InOrderTraversal(node.left, array)
+        array.append(node)
+        InOrderTraversal(node.right, array)
+    return array
 
 
 """ Question 6 - Height balanced binary Tree
