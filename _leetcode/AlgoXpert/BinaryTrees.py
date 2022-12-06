@@ -182,9 +182,16 @@ def InOrderTraversal(node, array):
 
 
 """ Question 6 - Height balanced binary Tree
-    Write a func that 
-    e.g:
-    Method: 
+    Given the root node of a BT. Write a func to return True if it is balanced else False.
+    A tree is balanced if the difference btw the height of its left subtree & height of its right subtree is at most 1
+    e.g:                        tree = 1
+                                        /   \
+                                      2      3
+                                    / \        \
+                                  4    5       6
+                                      /  \
+                                    7     8   --> True
+    Method: 0(n) time | 0(h) space
 """
 
 
