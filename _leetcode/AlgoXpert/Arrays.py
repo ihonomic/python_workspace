@@ -412,12 +412,15 @@ def arrayOfProducts(array):
     [2,1,5,2,3,3,4], 2 appeared first
     Method 1 - 0(n^2) time 0(1) space
     Method 2 - 0(n) time 0(n) space, Using hashSet or hashMap
-    Method 3 - 0(n) time, 0(1) space - Mark each element to negative by their index, the next time you encounter a negative value at the index that
-    the integer maps to you know that you've already seen that interger
+    Method 3 - 0(n) time, 0(1) space 
+        - By substracting each number from 1, it represent an index in the array,
+        - Whatever number you find in the index, flag it as negative 
+        - The next time you encounter a number at an index that's already negative, you know you've already seen the number that produces that index
 """
 
 
 def firstDuplicateValue(array):
+    # we're substracting 1 because we're dealing with' index and the questions says from 1-n
     for n in array:
         # get index
         absN = abs(n)
@@ -455,7 +458,39 @@ def mergeOverlappingIntervals(intervals):
     return output
 
 
+""" Question : 3 Sum
+
+    Method : 0(n^2)time, 0(n)space 
+    
+"""
+
+
+def threeNumberSum(array, targetSum):
+    result = []
+
+    array.sort()
+
+    for i in range(len(array) - 1):
+        left = i + 1
+        right = len(array) - 1
+        while left < right:
+            calcd = array[i] + array[left] + array[right]
+            if calcd == targetSum:
+                result.append([array[i], array[left], array[right]])
+
+                left += 1
+                right -= 1
+
+            if calcd > targetSum:
+                right -= 1
+            if calcd < targetSum:
+                left += 1
+
+    return result
+
+
 """ Question 15 - 4sum
+
     Method : 0(n^3) time, 0(n^2) space
     - Like 3 sum, a double for-loop before searching with pointers.
 """
