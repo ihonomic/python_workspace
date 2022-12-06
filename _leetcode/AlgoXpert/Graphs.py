@@ -109,7 +109,7 @@ class Node:
 
 
 """ Question 4: Rivers Sizes
-    Given a 2D array(matrix) pof potentially unequal widths and heights containing 0s & 1s. Each
+    Given a 2D array(matrix) of potentially unequal widths and heights containing 0s & 1s. Each
     0s represents land and 1s represent river. NOTE: A river consists of any number of 1s (horizontally, or vetically) 
     but not diagonal. The number of adjacent 1s forming a river determine its size.
     
@@ -264,4 +264,126 @@ def findDepth(node, top):
         depth += 1
         node = node.ancestor
     return depth
+
+
+""" Question 6: Remove Islands
+    Given a 2D array(matrix) of potentially unequal widths and heights containing 0s & 1s. Each
+    0s represents white and 1s represent black. An island is defined as any number of 1s that are horizontally 
+    or vertically adjacent (but not diagonal) and that doesn't touch the border of the image. In other words a group 
+    of horizontally or vertically 1s isn't an island if any of those 1s are in the first row, last row, last column or first 
+    column of the input matrix.
+    
+    NOTE: An island can twist, i.e have L shape
+    
+    You can think of an island that doesn't touch the the border of the two-toned image.
+    
+    Write a function that returns a modified version of the matrix, where all of its island are removed. You remove an island
+    by replacing it with 0s. Mutate the original matrix
+    
+    e.g: matrix=[
+                [1, 0, 0, 0, 0, 0], 
+                [0, 1, 0, 1, 1, 1], 
+                [0, 0, 1, 0, 1, 0], 
+                [1, 1, 0, 0, 1, 0], 
+                [1, 0, 1, 1, 0, 0], 
+                [1, 0, 0, 0, 0, 1]
+            ]    --> 
+            
+            [
+                [1, 0, 0, 0, 0, 0],
+                [0, 0, 0, 1, 1, 1], 
+                [0, 0, 0, 0, 1, 0], 
+                [1, 1, 0, 0, 1, 0], 
+                [1, 0, 0, 0, 0, 0], 
+                [1, 0, 0, 0, 0, 1]
+            ]
+    Method 1: 0(wh) time | 0(wh) space
+        - Create an identical matrix of flags False
+        - First find all the 1s at the border and DFS the other 1s connected to them and mark them as True
+        - Second: Look in the interior, and swap 1s to 0s if False
+    Method 2: 0(wh) time | 0(wh) space
+         - Swap all 1s at the border and those connected to it with 2.
+        - Now go through the entire matrix and replace the 2s with 1 and the leftover 1s with 0
+
+"""
+
+
+def removeIslands(matrix):
+
+    onesConnectedToBorder = [[False for value in row] for row in matrix]  # Create flags, Mark all as False
+
+    # 1.
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            rowIsBorder = i == 0 or i == len(matrix) - 1  # Is the current row first or last?
+            colIsBorder = j == 0 or j == len(matrix[i]) - 1  # Is the current col first or last?
+            isBorder = rowIsBorder or colIsBorder
+            if not isBorder:
+                continue
+
+            if matrix[i][j] != 1:
+                continue
+
+            findOnesConnectedToBorder(matrix, i, j, onesConnectedToBorder)
+
+    # 2.
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            if onesConnectedToBorder[i][j] is False and matrix[i][j] == 1:
+                matrix[i][j] = 0
+
+    return matrix
+
+
+def findOnesConnectedToBorder(matrix, startRow, startCol, onesConnectedToBorder):
+    # apply DFS iteratively - stack but if BFS, use a queue
+    stack = [(startRow, startCol)]
+    while stack:
+        currentRow, currentCol = stack.pop()
+
+        alreadyVisited = onesConnectedToBorder[currentRow][currentCol]
+        if alreadyVisited:
+            continue
+
+        onesConnectedToBorder[currentRow][currentCol] = True
+
+        neighbors = getNeighbors(matrix, currentRow, currentCol)
+        for neighbor in neighbors:
+            row, col = neighbor
+
+            if matrix[row][col] != 1:
+                continue
+
+            stack.append(neighbor)  # only add to stack if neighbor is 1
+
+
+def getNeighbors(matrix, row, col):
+    # Beware of outofbounds
+    neighbors = []
+
+    numRows = len(matrix)
+    numCols = len(matrix[row])
+
+    if row - 1 >= 0:  # UP
+        neighbors.append((row - 1, col))
+    if row + 1 < numRows:  # DOWN
+        neighbors.append((row + 1, col))
+    if col - 1 >= 0:  # LEFT
+        neighbors.append((row, col - 1))
+    if col + 1 < numCols:  # RIGHT
+        neighbors.append((row, col + 1))
+
+    return neighbors
+
+
+
+
+
+
+
+
+
+
+
+
 
