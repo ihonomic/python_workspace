@@ -432,13 +432,16 @@ def firstDuplicateValue(array):
 
 
 """ Question 14 - Merge-overlapping intervals 
-    [[1,2], [3,5], [4,7], [6,8], [9,10]] -> [[1,2], [3,8], [9,10]] 
-    [[1,4], [6,9], [5, 10]] -> [1,10]
+
+    e.g: [[1,2], [3,5], [4,7], [6,8], [9,10]] -> [[1,2], [3,8], [9,10]] 
+    [[1,4], [6,9], [5, 10]] --> [1,10]
+    Method : 0(nlogn) time and 0(n) space
+        - Compare the incoming interval to the last saved interval. 
+        - If the start of the incoming is less than/equal to the end of the last saved, overrite the last saved with the maximum ends of incoming and last saved. 
 """
 
 
 def mergeOverlappingIntervals(intervals):
-    # 0(nlogn) time and 0(n) space
 
     intervals.sort(key=lambda x: x[0])
     output = []
@@ -448,6 +451,7 @@ def mergeOverlappingIntervals(intervals):
         if not output:
             output.append(intervals[idx])
         else:
+            # if the start of the current interval is less than or equal to the end of the last saved
             if intervals[idx][0] <= output[-1][1]:
                 output[-1][1] = max(intervals[idx][1], output[-1][1])
             else:
@@ -459,6 +463,7 @@ def mergeOverlappingIntervals(intervals):
 
 
 """ Question : 3 Sum
+    Return all combination of numbers from the array that equals to targetSum
 
     Method : 0(n^2)time, 0(n)space 
     
@@ -526,11 +531,12 @@ def fourNumberSum(array, targetSum):
     make the entire array sorted. If the entire is already sorted, return [-1, -1]
     e.g : [0,1,2,5,4,7,3,6,8,9],--> [3, 7]
     The subarray =[5,4,7,3,6] need to be sorted to make the entire array sorted
+    
     Method 1: 0(n) time | 0(1) space
         Note: if one number is found unsorted, that means two is unsorted, 
         The subarray is dependent on the values that are out of order.
             (where the min and max values are suppose to be)
-    - The idea is to find the minimum and maximum value of that are out of order
+    - The idea is to find the minimum and maximum value that are out of order.
     - Find the position index of where both the minimum value and maximum value are
         suppose to be
 """
