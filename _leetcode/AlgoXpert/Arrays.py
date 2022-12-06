@@ -358,33 +358,37 @@ def spiralTraverse(array):
     [1,2,3,3,4,0, 10, 6,5,-1,-3,2,3] -> 0,10,6,5,-1,-3, maxPeak= 6,
     there is a peak happening at 10
     Method 1 - 0(n) time, 0(1) space.
-    
+        - start from the second element
 """
 
 
 def longestPeak(array):
-
     maxPeak = 0
-    i, end = 1, len(array) - 1
+    i = 1
+    end = len(array) - 1  # we need i to stop before the last
 
     while i < end:
         isPeak = array[i - 1] < array[i] and array[i] > array[i + 1]
+        # previous & current is not a start of a peak. Go FORWARD
         if not isPeak:
             i += 1
             continue
-        # left
-        leftIdx = i - 2
-        while leftIdx >= 0 and array[leftIdx] < array[leftIdx + 1]:
-            leftIdx -= 1
-        # right
-        rightIdx = i + 2
-        while rightIdx < len(array) and array[rightIdx] < array[rightIdx - 1]:
-            rightIdx += 1
 
-        currentPeak = rightIdx - leftIdx - 1
-        maxPeak = max(maxPeak, currentPeak)
+        # if previous and current is a peak, start expanding until the peak condition is broken or outofbounds
+        left = i - 2
+        while left >= 0 and array[left] < array[left + 1]:
+            left -= 1
 
-        i = rightIdx
+        right = i + 2
+        while right < len(array) and array[right] < array[right - 1]:
+            right += 1
+
+        peakLength = right - left - 1  # -1 because left expanded beyond what we want
+
+        maxPeak = max(maxPeak, peakLength)
+
+        # continue from where right stopped
+        i = right
     return maxPeak
 
 
