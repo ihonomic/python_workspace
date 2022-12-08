@@ -123,7 +123,9 @@ class BST:
                 # 1. Does the node have left and right decendants ?
                 if currentNode.left is not None and currentNode.right is not None:
                     currentNode.value = currentNode.right.getMinValue()
-                    currentNode.right.remove(currentNode.value, currentNode)  # Go and remove it from the bottom
+                    currentNode.right.remove(
+                        currentNode.value, currentNode
+                    )  # Go and remove it from the bottom
 
                 # 2. Is the found node the first, i.e does not have a parent node?
                 elif parentNode is None:
@@ -145,12 +147,16 @@ class BST:
                 # 3. Ok great!, we found the currentNode to remove & it has a parentNode but it might be that
                 # the currentNode doesn't have a left node, that means we need to look to the right child
                 elif parentNode.left == currentNode:
-                    parentNode.left = currentNode.left if currentNode.left else currentNode.right
+                    parentNode.left = (
+                        currentNode.left if currentNode.left else currentNode.right
+                    )
 
                 # 4. Ok great!, we found the currentNode to remove & it has a parentNode but it was at the right
                 # side of the parentNode
                 elif parentNode.right == currentNode:
-                    parentNode.right = currentNode.left if currentNode.left else currentNode.right
+                    parentNode.right = (
+                        currentNode.left if currentNode.left else currentNode.right
+                    )
 
                 break
 
@@ -183,14 +189,24 @@ def validateBst(tree):
 
 
 def validateBstHelper(tree, leftParent, rightParent):
+    # if it passes the recursive checks all the way to the end, return True
     if tree is None:
         return True
 
-    if tree.value < leftParent or tree.value >= rightParent:  # why? - Value can never be less than or greater than Inf
+    # why? - Value can never be less than or greater than Inf
+    if tree.value < leftParent or tree.value >= rightParent:
         return False
 
-    isLeftValid = validateBstHelper(tree.left, leftParent, tree.value, )
-    isRightValid = validateBstHelper(tree.right, tree.value, rightParent, )
+    isLeftValid = validateBstHelper(
+        tree.left,
+        leftParent,
+        tree.value,
+    )
+    isRightValid = validateBstHelper(
+        tree.right,
+        tree.value,
+        rightParent,
+    )
 
     return isLeftValid and isRightValid
 
@@ -402,7 +418,9 @@ def sameBsts(arrayOne, arrayTwo):
         newArrayTwoLeft = [value for value in arrayTwo if value < arrayTwoRoot]
         newArrayTwoRight = [value for value in arrayTwo if value >= arrayTwoRoot]
 
-        return sameBsts(newArrayOneLeft, newArrayTwoLeft) and sameBsts(newArrayOneRight, newArrayTwoRight)
+        return sameBsts(newArrayOneLeft, newArrayTwoLeft) and sameBsts(
+            newArrayOneRight, newArrayTwoRight
+        )
     else:
         return False
 

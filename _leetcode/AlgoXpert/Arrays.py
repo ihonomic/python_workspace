@@ -16,9 +16,9 @@
 """
 
 
-
-
 import math
+
+
 def isValidSubsequence(array, sequence):
     # 0(n) time, 0(1) space, where n is length of array
     # Two pointers, let l = sequence, r = array
@@ -53,10 +53,10 @@ def sortedSquaredArray(array):
         largest = array[r]
 
         if abs(smallest) > abs(largest):
-            output[i] = smallest ** 2
+            output[i] = smallest**2
             l += 1
         else:
-            output[i] = largest ** 2
+            output[i] = largest**2
             r -= 1
 
     return output
@@ -65,6 +65,12 @@ def sortedSquaredArray(array):
 """ Question 4 - An algorithm challenge, Given an array of pairs team who competed, and array of the result in (0 & 1), If 1 = Home won, 0 = Away won. 
     Return the overall best team. The one with the most wins, asumming each win is 3 points
     Method 1 - Use hashmap to save the bestTeam, 
+    e.g: competitions=[
+        ['HTML', 'C#'], 
+        ['C#', 'Python'], 
+        ['Python', 'HTML']
+    ] 
+    results=[0, 0, 1]     --> "Python"
 
 """
 
@@ -73,7 +79,7 @@ def tournamentWinner(competitions, results):
     # 0(n) time, 0(k) space - where n is number of competitions, k is number of teams
     # hash the winners points
 
-    bestTeam = ''
+    bestTeam = ""
     hashMap = {bestTeam: 0}
 
     for match, result in zip(competitions, results):
@@ -93,27 +99,31 @@ def tournamentWinner(competitions, results):
     return bestTeam
 
 
-""" Question 5
-
+""" Question 5: Non-constructible chnage . 
+    Given an array of positive integers representing a the coins in your possession, write a function that returns the minimum sum of change
+    that you CANNOT create. The array is not unique
+    
+    e.g [] --> 1
+         [1,2,5] --> 4
+         [5, 7, 1, 1, 2, 3, 22] --> 20
+    Method: 0(nlogn) time | 0(1) space
+    - The minimum amount you cannot create is usually the next unavailable number after the sum of all least numbers before it 
+    i.e if all numbers sums up, we're unable to derive that number
 """
 
 
 def nonConstructibleChange(coins):
-    # Write your code here.
-    array = []
 
-    for i in range(len(coins)-1):
-        for j in range(i+1, len(coins)):
-            array.append(coins[i] + coins[j])
+    coins.sort()
 
-    s = set(array + coins)
+    currentChangeCreated = 0
+    for coin in coins:
+        # i.e all the previous sums  didnt create this number and now we're currently at a number greater than it
+        if coin > currentChangeCreated + 1:
+            return currentChangeCreated + 1
+        currentChangeCreated += coin
 
-    print(s)
-    max_ = max(s)
-    for i in range(1, max_+1):
-        if i not in s:
-            return i
-    return i + 1
+    return currentChangeCreated + 1
 
 
 print(nonConstructibleChange([1, 2, 4, 7]))
@@ -134,9 +144,9 @@ def threeNumberSum(array, targetSum):
 
     array.sort()
 
-    for i in range(len(array)-1):
-        left = i+1
-        right = len(array)-1
+    for i in range(len(array) - 1):
+        left = i + 1
+        right = len(array) - 1
         while left < right:
             calcd = array[i] + array[left] + array[right]  # <== FORMULAR POINT
             if calcd == targetSum:
@@ -153,14 +163,18 @@ def threeNumberSum(array, targetSum):
     return result
 
 
-""" Question 7 - Given 2 arrays, returns the two numbers from each array that resulted to the least difference.
-            NOTE: Consider Line number scale, diff = -5 and 5 = 10. diff = -5 and -4 = -1
+""" Question 7 -  Smallest Difference
+    Given 2 arrays, returns the two numbers from each array whose absolute difference is closest to 0
+            NOTE: The absolute difference of 2 integers is the distance between them on a real number line
+            Consider Line number scale, diff = -5 and 5 = 10. diff = -5 and -4 = -1
         arr1 = [-1,5,10,20,28,3]
         arr2 = [26,134,135,15,17] solution => [28,26]
     Method 1 - 0(n * m) time, 0(1)space - Quadratic looping through arr1 and arr2, if the difference is lower than the last recorded difference,
                 overrite it. Also overrite with both pair
     Method 2 - 0(nlongn + mlogm) time, 0(1) space - Sort the array. Two pointers. Until the left and right are within bounds. Continue to find the 
         difference between both sides nums, if 0, return pair, otherwise record it if is lower than the previous.
+        
+        we're shifting pointers because we are trying to obtain the closest difference to 0 
 """
 
 
@@ -189,7 +203,7 @@ def smallestDifference(arrayOne, arrayTwo):
     arrayTwo.sort()
 
     left = right = 0
-    smallest = float('inf')
+    smallest = float("inf")
     smallestPair = []
 
     while left < len(arrayOne) and right < len(arrayTwo):
@@ -203,7 +217,7 @@ def smallestDifference(arrayOne, arrayTwo):
             current = (firstNum) - (secondNum)
             right += 1
         else:
-            return [firstNum, secondNum]   # if diff is 0.
+            return [firstNum, secondNum]  # if diff is 0.
 
         if current < smallest:
             smallest = current
@@ -212,7 +226,8 @@ def smallestDifference(arrayOne, arrayTwo):
     return smallestPair
 
 
-""" Question 8 - Given an array, Move all occurrences of a target element to the end. The order of the elements doesn't matter.
+""" Question 8 - Move element to end 
+    Given an array, Move all occurrences of a target element to the end. The order of the elements doesn't matter.
     [2,1,3,2,4,2,1,2], toMove = 2. Solution => [1,3,4,1,2,2,2,2]
     Method 1 - Two pointers, On the left side keep looping until the target is found, on the right side keep looping until a non-target is
         found, swap them. 
@@ -221,7 +236,7 @@ def smallestDifference(arrayOne, arrayTwo):
 
 def moveElementToEnd(array, toMove):
     # 0(n) time, 0(1) space
-    left, right = 0, len(array)-1
+    left, right = 0, len(array) - 1
     while left <= right:
         #   if not target, please move to next, same idea to skip duplicated number in a rotated array with duplicates.
         while left < right and array[left] != toMove:
@@ -237,15 +252,16 @@ def moveElementToEnd(array, toMove):
     return array
 
 
-""" Question 9 - Given an array, Determine if it is Monotonic. 
-    A monotomic array is that that is continuously increasing or contineously decreasing. 
+""" Question 9 - Monotonic Array
+    Given an array, Determine if it is Monotonic. 
+    A monotomic array is that which continuously increasing or contineously decreasing. 
     Although similar adjacents elements is still regarded as being monotomic
-    Method 1 - Determine if the array is increasing or decreasing by the first 2 different elements. Use a flag
+    Method 1 - 0(n) time, 0(1) space.
+        First Determine if the array is increasing or decreasing by the first 2 different elements. Use a flag
 """
 
 
 def isMonotonic(array):
-    # 0(n) time, 0(1) space.
     # - take care of empty or single element array, they're monotonic
     # - Determine if elements are increasing or non-decreasing with a flag
     # - if increasing, the next element is lower than the current element return false
@@ -263,11 +279,19 @@ def isMonotonic(array):
         l += 1
         r += 1
 
-    for i in range(len(array)-1):
-        if is_increase and array[i] > array[i+1]:
+    for i in range(len(array) - 1):
+        if is_increase and array[i] > array[i + 1]:
             return False
 
     return True
+
+
+""" Question 9 - Spiral Matrix Traverse
+    Given a 2D array, Collect all numbers into an array. 
+    
+    Method 1 - 0(n) time, 0(n) space.
+        
+"""
 
 
 def spiralTraverse(array):
@@ -283,27 +307,27 @@ def spiralTraverse(array):
     result => [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
     """
     result = []
-    startRow, endRow = 0, len(array)-1
+    startRow, endRow = 0, len(array) - 1
     startCol, endCol = 0, len(array[0]) - 1
 
     while startRow <= endRow and startCol <= endCol:
         # top
-        for col in range(startCol, endCol+1):
+        for col in range(startCol, endCol + 1):
             result.append(array[startRow][col])
 
         # right
-        for row in range(startRow+1, endRow+1):
+        for row in range(startRow + 1, endRow + 1):
             result.append(array[row][endCol])
 
         # bottom
         for col in reversed(range(startCol, endCol)):
-            # Make sure bottom != top
+            # Make sure bottom != top -- CHECK ROW CONSTRAINT, IF YOU"RE COLLECTING COLUMN,
             if startRow == endRow:
                 break
             result.append(array[endRow][col])
 
         # left
-        for row in reversed(range(startRow+1, endRow)):
+        for row in reversed(range(startRow + 1, endRow)):
             # Make sure left != right
             if startCol == endCol:
                 break
@@ -317,82 +341,107 @@ def spiralTraverse(array):
     return result
 
 
-def longestPeak(array):
-    ''' Find the longest peak in an array. A peak is where the adjacents element is strictly increasing
-    until they reach a tip(highest value in the peak), at which point they become strictly decreasing.
-
-    The tip of a peak, is at the point where 
-    it was increasing and then decreases.  
-             l     p          r
-    [1,2,3,3,4,0, 10, 6,5,-1,-3,2,3] -> 0,10,6,5,-1,-3, maxPeak= 6, 
+""" Question 9 - Longest Peak
+    Write a function that takes in an array of integers and return the length of the longest peak in the array
+    
+    A peak is where the adjacents element is strictly increasing
+    until they reach a tip(usually highest value in the peak), at which point they become strictly decreasing
+    
+    [1,4,10,2] is a peak
+    [4,0,10] not a peak
+    [1,2,2,0] not a peak
+    [1,2,3] not a peak because there is any strictly decreasing after 3
+    
+    e.g : array=[1, 2, 3, 3, 4, 0, 10, 6, 5, -1, -3, 2, 3] --> 6 // 0, 10, 6, 5, -1, -3
+    The tip of a peak, is at the point where it was increasing and then decreases.
+            l     p          r
+    [1,2,3,3,4,0, 10, 6,5,-1,-3,2,3] -> 0,10,6,5,-1,-3, maxPeak= 6,
     there is a peak happening at 10
-    '''
+    Method 1 - 0(n) time, 0(1) space.
+        - start from the second element
+"""
+
+
+def longestPeak(array):
     maxPeak = 0
-    i, end = 1, len(array)-1
+    i = 1
+    end = len(array) - 1  # we need i to stop before the last
 
     while i < end:
-        isPeak = array[i-1] < array[i] and array[i] > array[i+1]
+        isPeak = array[i - 1] < array[i] and array[i] > array[i + 1]
+        # previous & current is not a start of a peak. Go FORWARD
         if not isPeak:
             i += 1
             continue
-        # left
-        leftIdx = i - 2
-        while leftIdx >= 0 and array[leftIdx] < array[leftIdx + 1]:
-            leftIdx -= 1
-        # right
-        rightIdx = i + 2
-        while rightIdx < len(array) and array[rightIdx] < array[rightIdx - 1]:
-            rightIdx += 1
 
-        currentPeak = rightIdx - leftIdx - 1
-        maxPeak = max(maxPeak, currentPeak)
+        # if previous and current is a peak, start expanding until the peak condition is broken or outofbounds
+        left = i - 2
+        while left >= 0 and array[left] < array[left + 1]:
+            left -= 1
 
-        i = rightIdx
+        right = i + 2
+        while right < len(array) and array[right] < array[right - 1]:
+            right += 1
+
+        peakLength = right - left - 1  # -1 because left expanded beyond what we want
+
+        maxPeak = max(maxPeak, peakLength)
+
+        # continue from where right stopped
+        i = right
     return maxPeak
 
 
-"""Question 12- A function that returns an array of the same length, where each element in the output array
-is equal to the product of every other number in the input array
-[5,1,4,2] => [8, 40, 10, 20]
+"""Question 12- Array of products 
+    A function that returns an array of the same length, where each element in the output array
+    is equal to the product of every other number in the input array
+    [5,1,4,2] => [8, 40, 10, 20]
 """
 
 
 def arrayOfProducts(array):
     output = []
     for i in range(len(array)):
-        output.append(math.prod(array[0:i] + array[i+1:]))
+        output.append(math.prod(array[0:i] + array[i + 1 :]))
     return output
 
 
-"""Question 13 - First duplicate value - Given an array of integers between 1 and n, where n is the length of the array, return the number
-that is duplicated first.
-[2,1,5,2,3,3,4], 2 appeared first
-Method 1 - 0(n^2) time 0(1) space
-Method 2 - 0(n) time 0(n) space, Using hashSet or hashMap
-Method 3 - 0(n) time, 0(1) space - Mark each element to negative by their index, the next time you encounter a negative value at the index that
-the integer maps to you know that you've already seen that interger
+"""Question 13 - First duplicate value 
+    Given an array of integers between 1 and n, where n is the length of the array, return the number
+    that is duplicated first.
+    [2,1,5,2,3,3,4], 2 appeared first
+    Method 1 - 0(n^2) time 0(1) space
+    Method 2 - 0(n) time 0(n) space, Using hashSet or hashMap
+    Method 3 - 0(n) time, 0(1) space 
+        - By substracting each number from 1, it represent an index in the array,
+        - Whatever number you find in the index, flag it as negative 
+        - The next time you encounter a number at an index that's already negative, you know you've already seen the number that produces that index
 """
 
 
 def firstDuplicateValue(array):
+    # we're substracting 1 because we're dealing with' index and the questions says from 1-n
     for n in array:
         # get index
         absN = abs(n)
         if array[absN - 1] < 0:
             return absN
-        array[absN-1] *= -1
+        array[absN - 1] *= -1
 
     return -1
 
 
 """ Question 14 - Merge-overlapping intervals 
-[[1,2], [3,5], [4,7], [6,8], [9,10]] -> [[1,2], [3,8], [9,10]] 
-[[1,4], [6,9], [5, 10]] -> [1,10]
+
+    e.g: [[1,2], [3,5], [4,7], [6,8], [9,10]] -> [[1,2], [3,8], [9,10]] 
+    [[1,4], [6,9], [5, 10]] --> [1,10]
+    Method : 0(nlogn) time and 0(n) space
+        - Compare the incoming interval to the last saved interval. 
+        - If the start of the incoming is less than/equal to the end of the last saved, overrite the last saved with the maximum ends of incoming and last saved. 
 """
 
 
 def mergeOverlappingIntervals(intervals):
-    # 0(nlogn) time and 0(n) space
 
     intervals.sort(key=lambda x: x[0])
     output = []
@@ -402,6 +451,7 @@ def mergeOverlappingIntervals(intervals):
         if not output:
             output.append(intervals[idx])
         else:
+            # if the start of the current interval is less than or equal to the end of the last saved
             if intervals[idx][0] <= output[-1][1]:
                 output[-1][1] = max(intervals[idx][1], output[-1][1])
             else:
@@ -412,9 +462,42 @@ def mergeOverlappingIntervals(intervals):
     return output
 
 
+""" Question : 3 Sum
+    Return all combination of numbers from the array that equals to targetSum
+
+    Method : 0(n^2)time, 0(n)space 
+    
+"""
+
+
+def threeNumberSum(array, targetSum):
+    result = []
+
+    array.sort()
+
+    for i in range(len(array) - 1):
+        left = i + 1
+        right = len(array) - 1
+        while left < right:
+            calcd = array[i] + array[left] + array[right]
+            if calcd == targetSum:
+                result.append([array[i], array[left], array[right]])
+
+                left += 1
+                right -= 1
+
+            if calcd > targetSum:
+                right -= 1
+            if calcd < targetSum:
+                left += 1
+
+    return result
+
+
 """ Question 15 - 4sum
-- Like 3 sum, a double for-loop before searching with pointers.
-    - 0(n^3) time, 0(n^2) space
+
+    Method : 0(n^3) time, 0(n^2) space
+    - Like 3 sum, a double for-loop before searching with pointers.
 """
 
 
@@ -423,10 +506,10 @@ def fourNumberSum(array, targetSum):
     output = []
     array.sort()
 
-    for i in range(len(array)-3):
-        for j in range(i+1, len(array)-2):
+    for i in range(len(array) - 3):
+        for j in range(i + 1, len(array) - 2):
 
-            l, r = j+1, len(array)-1
+            l, r = j + 1, len(array) - 1
 
             while l < r:
                 curr = [array[i], array[j], array[l], array[r]]
@@ -448,11 +531,12 @@ def fourNumberSum(array, targetSum):
     make the entire array sorted. If the entire is already sorted, return [-1, -1]
     e.g : [0,1,2,5,4,7,3,6,8,9],--> [3, 7]
     The subarray =[5,4,7,3,6] need to be sorted to make the entire array sorted
+    
     Method 1: 0(n) time | 0(1) space
         Note: if one number is found unsorted, that means two is unsorted, 
         The subarray is dependent on the values that are out of order.
             (where the min and max values are suppose to be)
-    - The idea is to find the minimum and maximum value of that are out of order
+    - The idea is to find the minimum and maximum value that are out of order.
     - Find the position index of where both the minimum value and maximum value are
         suppose to be
 """
