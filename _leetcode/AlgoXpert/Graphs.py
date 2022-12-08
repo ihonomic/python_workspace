@@ -2,7 +2,7 @@
 GRAPHS - Vertices are nodes (v), Edges are connected lines between nodes (e)
 """
 
-""" Question 1: Depth - first search
+""" Question 1: Depth - first search & Breath - First Search
     Given a node class that has a name and an array of optional children nodes.
     Implement a DFS method on the node class, which takes in an empty array, traverses the tree
     using DFS approach (moving from left to right), stores all the nodes in the input array and return it
@@ -12,9 +12,22 @@ GRAPHS - Vertices are nodes (v), Edges are connected lines between nodes (e)
                               /  \       /  \
                             E     F    G    H
                                 /   \    \
-                              I       J    K     --> [A, B, E, F, I, J, C, D, G, K, H]
+                              I       J    K     
+    // DFS --> [A, B, E, F, I, J, C, D, G, K, H]
+    // BFS --> [A, B, C, D,E,F,G,H,I,J,K]
+    
     Method: 0(v + e) time | 0(v) space 
-        Add the current item, call the function on the item's children, return the array.
+        DFS
+        - Add the current item, 
+        - call the function on each class children, (recursively)
+        - return the array.
+        
+        BFS
+        - use a queue to consider the earliest node
+        - Add the current item to array, 
+        - Add the current's childrens to queue, 
+        - return the array.
+        
 """
 
 
@@ -28,10 +41,23 @@ class Node:
         return self
 
     def depthFirstSearch(self, array):
+        # 0(v + e) time | 0(v) space - Recursively
         # Add the current item, call the function on the item's children, return the array.
+
         array.append(self.name)
         for child in self.children:
             child.depthFirstSearch(array)
+        return array
+
+    def breadthFirstSearch(self, array):
+        # 0(v + e) time | 0(v) space - Iteratively
+
+        queue = [self]
+        while queue:
+            current = queue.pop(0)
+            array.append(current.name)
+            for child in current.children:
+                queue.append(child)
         return array
 
 
@@ -85,27 +111,8 @@ def getNextIdx(currentIdx, array):
                                 /   \    \
                               I       J    K     --> [A, B, C, D,E,F,G,H,I,J,K]
     Method: 0(v + e) time | 0(v) space 
-        Use a queue, the explore the earliest node
+      
 """
-
-
-class Node:
-    def __init__(self, name):
-        self.children = []
-        self.name = name
-
-    def addChild(self, name):
-        self.children.append(Node(name))
-        return self
-
-    def breadthFirstSearch(self, array):
-        queue = [self]
-        while queue:
-            current = queue.pop(0)
-            array.append(current.name)
-            for child in current.children:
-                queue.append(child)
-        return array
 
 
 """ Question 4: Rivers Sizes
@@ -133,7 +140,8 @@ class Node:
 
 def riverSizes(matrix):
     sizes = []
-    visited = [[False for value in row] for row in matrix]  # Create flags, Mark all as not visited
+    visited = [[False for _ in row]
+               for row in matrix]  # Create flags, Mark all as not visited
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
             if visited[i][j]:
@@ -147,9 +155,8 @@ def traverseNode(i, j, matrix, visited, sizes):
     # apply DFS iteratively - stack but if BFS, use a queue
     nodesToExplore = [[i, j]]
     while nodesToExplore:
-        currentNode = nodesToExplore.pop()
-        i = currentNode[0]
-        j = currentNode[1]
+        i, j = nodesToExplore.pop()
+
         if visited[i][j]:
             continue
         # else mark it as now visited
@@ -167,27 +174,29 @@ def traverseNode(i, j, matrix, visited, sizes):
         sizes.append(currentRiverSize)
 
 
-def getUnvisitedNeigbors(i, j, matrix, visited):
-    # Beware of outofbounds , TRICK: consider bounds from the middle locations
-    unvisitedNeighbors = []
+def getUnvisitedNeigbors(row, col, matrix, visited):
+    # Beware of outofbounds and avoid those already visited
+    # TRICK: consider bounds from the middle locations
 
-    # 1. TOP. if we've not visited the neigbor above (i.e not on first row)
-    if i > 0 and not visited[i - 1][j]:
-        unvisitedNeighbors.append([i - 1, j])
+    neighbors = []
 
-    # 2. BOTTOM. if we've not visited the neigbor below (i.e not on last row)
-    if i < len(matrix) - 1 and not visited[i + 1][j]:
-        unvisitedNeighbors.append([i + 1, j])
+    numRows = len(matrix)
+    numCols = len(matrix[row])
 
-    # 3. LEFT.
-    if j > 0 and not visited[i][j - 1]:
-        unvisitedNeighbors.append([i, j - 1])
+    # UP
+    if row - 1 >= 0 and not visited[row-1][col]:
+        neighbors.append((row - 1, col))
+    # DOWN
+    if row + 1 < numRows and not visited[row+1][col]:
+        neighbors.append((row + 1, col))
+    # LEFT
+    if col - 1 >= 0 and not visited[row][col-1]:
+        neighbors.append((row, col - 1))
+    # RIGHT
+    if col + 1 < numCols and not visited[row][col+1]:
+        neighbors.append((row, col + 1))
 
-    # 4. RIGHT
-    if j < len(matrix[0]) - 1 and not visited[i][j + 1]:
-        unvisitedNeighbors.append([i, j + 1])
-
-    return unvisitedNeighbors
+    return neighbors
 
 
 """ Question 5: Youngest common ancestor
@@ -310,13 +319,16 @@ def findDepth(node, top):
 
 def removeIslands(matrix):
 
-    onesConnectedToBorder = [[False for value in row] for row in matrix]  # Create flags, Mark all as False
+    onesConnectedToBorder = [[False for value in row]
+                             for row in matrix]  # Create flags, Mark all as False
 
     # 1.
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
-            rowIsBorder = i == 0 or i == len(matrix) - 1  # Is the current row first or last?
-            colIsBorder = j == 0 or j == len(matrix[i]) - 1  # Is the current col first or last?
+            # Is the current row first or last?
+            rowIsBorder = i == 0 or i == len(matrix) - 1
+            # Is the current col first or last?
+            colIsBorder = j == 0 or j == len(matrix[i]) - 1
             isBorder = rowIsBorder or colIsBorder
             if not isBorder:
                 continue
@@ -374,16 +386,3 @@ def getNeighbors(matrix, row, col):
         neighbors.append((row, col + 1))
 
     return neighbors
-
-
-
-
-
-
-
-
-
-
-
-
-

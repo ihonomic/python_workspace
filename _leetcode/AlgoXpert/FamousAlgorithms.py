@@ -3,6 +3,10 @@
 - Assuming there are no negative values, the maximum is sum of the given array. 
 - But in this case there there are negative numbers in the array, using dynamic programming. 
     Find the sum so far, compare with the current. Keep track of the all-time largest sum 
+    
+    - Start from second index
+    - running sum to this point
+    - running sum so far
 """
 
 
