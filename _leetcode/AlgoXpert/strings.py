@@ -37,7 +37,10 @@ def caesarCipherEncryptor(string, key):
 """ Question 2 - Run Length Encoding 
     Given a non-empty string, return its run-length encoding. Limits run of more than 9 consecutives alphabets
     e.g => 'AAAAAAAAAAAAABBCCCCDD' -> '9A4A2B4C2D'
-    METHOD 1 : 0(n) time | 0(1) space. Start from second index, compare with the previous, count if similar, otherwise, reset count.
+    METHOD 1 : 0(n) time | 0(1) space. 
+    - Start from second index, 
+    - compare with the previous, 
+    - count if similar, otherwise, reset count.
                 Remember to concatenate the last index from the loop
 """
 
