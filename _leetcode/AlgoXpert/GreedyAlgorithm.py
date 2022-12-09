@@ -3,13 +3,23 @@
     but any can be executed in any order
 
     - A query waiting time is the amount of time that it must wait before its executions starts
+    Write a function that returns the minimum amount of total waiting time to  execute all the queries
     e.g queries=[3,2,1,2,6], --> 17
+    Before any of the query can be excecuted, its dependent on the sum of the queries before it. 
     Method : (nlogn) time | 0(1) space
         - Since u want the minimum queries first, sort it, then add the previous sum to the current running sum
 """
 
 
 def minimumWaitingTime(queries):
+    """
+    Sort it
+    [1,2,2,3,6]
+    //  before query 1 can execute, it needs to wait for: 1 secs
+    //  before query 2 can execute, it needs to wait for: 1+2 secs
+    //  before query 3 can execute, it needs to wait for: 1+2+2 secs
+    //  before query 4 can execute, it needs to wait for: 1+2+2+3 secs
+    """
     queries.sort()
 
     runningSum = 0
@@ -73,8 +83,16 @@ def tandemBicycle(redShirtSpeeds, blueShirtSpeeds, fastest):
 
 """ Question 4 - Task Assignments
     Given k-number of workers & an even array of tasks durations. Each worker is expected to complete 2 tasks, 
-    return the optimal assignment of tasks to each worker such that the tasks are completed as fast as possible
-    e,g : k=3 tasks=[1, 3, 5, 3, 1, 4]
+    return the optimal assignment of tasks to each worker such that the tasks are completed as fast as possible.
+    
+    Your function should return a list of pairs, where each pair stores the indices of the tasks that should be completed by
+    one worker.  
+    e,g : k=3 tasks=[1, 3, 5, 3, 1, 4] --> 
+    [
+        [0,2],
+        [4,5]
+        [1,3]
+    ]
     Method 1: 0(nlogn) time | 0(n) space
          Returns the optimal assignment of tasks.
         Avoid pairing long tasks together. Pair the shortest-duration tasks with the longest-
@@ -95,7 +113,9 @@ def taskAssignment(k, tasks):
     pairTasksResult = []
     leftIdx, rightIdx = 0, len(tasksPairIndices) - 1
     while leftIdx < rightIdx:
-        pairTasksResult.append([tasksPairIndices[leftIdx][0], tasksPairIndices[rightIdx][0]])
+        pairTasksResult.append(
+            [tasksPairIndices[leftIdx][0], tasksPairIndices[rightIdx][0]]
+        )
         leftIdx += 1
         rightIdx -= 1
 
@@ -135,4 +155,3 @@ def validStartingCity(distances, fuel, mpg):
             mostNegativeCity = currentSum
             validStartingIdx = (idx + 1) % len(distances)
     return validStartingIdx
-
