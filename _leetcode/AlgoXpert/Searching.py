@@ -156,7 +156,9 @@ def search(array, target):
     e.g : array=[8,5,2,9,7,6,3], k =3 --> 5
     METHOD 1: 0(nlogn) time | 0(1) space
     METHOD 2:  Quick-Sort technique: 0(n) time | 0(1) space
-        Quick sort the array but don;t call recursively, instead try to find the position
+    - We're looking for the kth element from the end. 
+    - The idea is to make a pivot index equal to the kth element 
+    - First pivot element will start at 0
 """
 
 
@@ -168,34 +170,26 @@ def quickselect(array, k):
 
 
 def quickselect(array, k):
-    #  0(n) time | 0(1) space
-    return quickSortHelper(array, 0, len(array) - 1, k - 1)
+    k = len(array) - k
+    return quickSelectHelper(0, len(array) - 1, array, k)
 
 
-def quickSortHelper(array, startIdx, endIdx, position):
-    while True:
-        if startIdx >= endIdx:
-            pass
+def quickSelectHelper(startIdx, endIdx, array, k):
+    pivotIdx = startIdx
+    for idx in range(startIdx, endIdx):
+        # Use <: if you're looking for kth largest
+        if array[idx] > array[endIdx]:
+            swap(idx, pivotIdx, array)
+            pivotIdx += 1
+    swap(pivotIdx, endIdx, array)
 
-        pivotIdx = startIdx
-        leftIdx = startIdx + 1
-        rightIdx = endIdx
-        while rightIdx >= leftIdx:
-            if array[leftIdx] > array[pivotIdx] > array[rightIdx]:
-                swap(leftIdx, rightIdx, array)
-            if array[leftIdx] < array[pivotIdx]:
-                leftIdx += 1
-            if array[rightIdx] > array[pivotIdx]:
-                rightIdx -= 1
-        swap(pivotIdx, rightIdx, array)
-
-        #  TAKE NOTE
-        if rightIdx == position:
-            return array[rightIdx]
-        elif rightIdx < position:
-            startIdx = rightIdx + 1
-        else:
-            endIdx = rightIdx - 1
+    # Decide which direction to go
+    if pivotIdx > k:
+        return quickSelectHelper(startIdx, pivotIdx - 1, array, k)
+    elif pivotIdx < k:
+        return quickSelectHelper(pivotIdx + 1, endIdx, array, k)
+    else:
+        return array[pivotIdx]
 
 
 def swap(i, j, array):

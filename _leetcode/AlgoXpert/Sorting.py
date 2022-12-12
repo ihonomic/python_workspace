@@ -230,7 +230,7 @@ def radixSort(array):
 
 
 def countingSort(array, digit):
-    countArray = [0] * 10
+    countArray = [0] * 10   # base 10
     sortedArray = [0] * len(array)
 
     # count the digit frequencies
