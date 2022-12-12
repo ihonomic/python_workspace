@@ -17,7 +17,7 @@ def removeDuplicates(arr):
     return k
 
     #  if 1 duplicate is allowed
-    k < 1 or arr[k-1]
+    # k < 1 or arr[k-1]
 
 
 def removeDuplicates2(nums) -> int:

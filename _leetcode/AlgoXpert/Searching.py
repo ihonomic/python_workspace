@@ -85,6 +85,31 @@ def searchInSortedMatrix(matrix, target):
     return [-1, -1]
 
 
+"""Question - Shifted Binary Search - Find the minimum element
+    Write a func that takes in a rotated sorted array and return the minimum element
+    e.g : nums=[45, 61, 71, 72, 73, 0, 1, 21, 33, 37]   --> 0
+    METHOD: 0(logn) time | 0(1) space
+    - If the mid element, is greater than the right element, that's abnormal, shift the left pointer after mid 
+    - if the mid element is less than the  right element, that's normal, shift the right pointer to mid
+    - If its equal, reduce right pointer by 1
+"""
+
+
+def findMin(nums) -> int:
+    leftIdx = 0
+    rightIdx = len(nums) - 1
+    while leftIdx < rightIdx:
+        mid = leftIdx + (rightIdx - leftIdx) // 2
+        if nums[mid] > nums[rightIdx]:
+            leftIdx = mid + 1
+        elif nums[mid] < nums[rightIdx]:
+            rightIdx = mid
+        else:
+            rightIdx -= 1
+
+    return nums[leftIdx]
+
+
 """Question 4 - Shifted Binary Search 
     Write a func that takes in a rotated sorted array and a target and return the 
     index of the target if found, otherwise return -1 
