@@ -63,8 +63,8 @@ def nodeDepths(root):
         if currentNode is not None:
             totalDepth += depth
             # the appending order doesn't matter
-            queue.append((currentNode.left, depth+1))
-            queue.append((currentNode.right, depth+1))
+            queue.append((currentNode.left, depth + 1))
+            queue.append((currentNode.right, depth + 1))
 
     return totalDepth
 
@@ -137,7 +137,6 @@ def swapLeftAndRight(node):
     Method: 0(n) time 0(h) space
 """
 
-
 """ Question 5 - Find Successor
     Write a func that takes in a BT (where nodes have an additional pointer to their parent node) 
     and a node contained in the tree, return the given node successor.
@@ -194,7 +193,6 @@ def InOrderTraversal(node, array):
     Method: 0(n) time | 0(h) space
 """
 
-
 """ Question 7 - Max Path sum In Binary Tree
     Write a function that takes in a Binary Tree and return its max path sum.
     NOTE: A path is a collection of connected nodes in a tree, where no node is connected to more than two other nodes;
@@ -216,7 +214,6 @@ def InOrderTraversal(node, array):
 
 
 def maxPathSum(tree):
-
     res = [tree.value]
 
     # Return max path sum without spilting
@@ -353,7 +350,6 @@ def populateNodesToParents(node, nodesToParents, parent=None):
 
 
 def iterativeInOrderTraversal(tree, callback):
-
     previousNode = None
     currentNode = tree
     while currentNode is not None:
@@ -391,9 +387,9 @@ def iterativeInOrderTraversal(tree, callback):
 def flattenBinaryTree(root):
     inOrderNodes = inOrderTraverse(root, [])
     # connect the nodes
-    for i in range(len(inOrderNodes)-1):
+    for i in range(len(inOrderNodes) - 1):
         leftNode = inOrderNodes[i]
-        rightNode = inOrderNodes[i+1]
+        rightNode = inOrderNodes[i + 1]
         leftNode.right = rightNode
         rightNode.left = leftNode
     return inOrderNodes[0]
@@ -405,6 +401,62 @@ def inOrderTraverse(root, array):
         array.append(root)  # in this case we want the node, not the value(root.value)
         inOrderTraverse(root.right, array)
     return array
+
+
+"""Question: Flatten Multilevel Linked List 
+    https://www.geeksforgeeks.org/flatten-a-linked-list-with-next-and-child-pointers/
+    Imagine a linked list with not just a next node, but a down node as well. 
+    We want to write a function that would "Flatten" that linked list by taking all the downward segments and merging 
+    them up between their parent and their parent's next. 
+    e.g:
+    [1] -> [2] -> [3] -> [8] -> [10]
+               |      |
+	           |     [9]
+			   |
+			  [4] -> [5] -> [6]
+			                 |
+							[7]
+							--> 
+	[1] -> [2] -> [3] -> [4] -> [5] -> [6] -> [7] -> [8] -> [9] -> [10]
+	METHOD:
+	    Recursively save to a stack, the current node, the downward node, the the next node
+	
+"""
+
+
+class Node:
+    def __init__(self, value: int, next=None, down=None):
+        self.value = value
+        self.next = next
+        self.down = down
+
+
+chain = Node(1, Node(2, Node(3,
+                             Node(8, Node(10), Node(9)),
+                             Node(4, Node(5, Node(6, down=Node(7))))
+                             )))
+
+
+def flatten_chain(chain):
+    def traverse(node, array):
+        if node is not None:
+            array.append(node)
+            traverse(node.next, array)
+            traverse(node.down, array)
+        return array
+
+    arrayOfNodes = traverse(chain, [])
+
+    # connect the nodes
+    for i in range(len(arrayOfNodes) - 1):
+        leftNode = arrayOfNodes[i]
+        rightNode = arrayOfNodes[i + 1]
+        leftNode.next = rightNode
+
+    # end the last node in the linkedlist
+    lastNode = arrayOfNodes[i + 1]
+    lastNode.next = None
+    return arrayOfNodes[0]
 
 
 """ Question 11: Right Sibling Tree 

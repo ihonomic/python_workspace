@@ -180,35 +180,25 @@ class BST:
                           /            \
                          1            14
     METHOD 1: # 0(n) time | 0(d) space. d is the longest depth of the tree.
-                - Compare the child to parent, if all condition is true till the last leaf, return True
+        - Just check if the previous element is greater/equal than the next 
+         (Same with flatterning a tree into singly linked list)
 """
 
 
 def validateBst(tree):
-    return validateBstHelper(tree, float("-inf"), float("inf"))
+    output = inOrderTraversal(tree, [])
+    for i in range(1, len(output)):
+        if output[i - 1] >= output[i]: # so
+            return False
+    return True
 
 
-def validateBstHelper(tree, leftParent, rightParent):
-    # if it passes the recursive checks all the way to the end, return True
-    if tree is None:
-        return True
-
-    # why? - Value can never be less than or greater than Inf
-    if tree.value < leftParent or tree.value >= rightParent:
-        return False
-
-    isLeftValid = validateBstHelper(
-        tree.left,
-        leftParent,
-        tree.value,
-    )
-    isRightValid = validateBstHelper(
-        tree.right,
-        tree.value,
-        rightParent,
-    )
-
-    return isLeftValid and isRightValid
+def inOrderTraversal(tree, array):
+    if tree is not None:
+        inOrderTraversal(tree.left, array)
+        array.append(tree.value)
+        inOrderTraversal(tree.right, array)
+    return array
 
 
 """ Question 4 : BST Travesal 
