@@ -124,9 +124,9 @@ def shiftedBinarySearch(array, target):
 
         #   Does it contain duplicates(Don't do this if DISTINCT)
         while left < right and array[left] == array[left + 1]:
-            left = left + 1
+            left += 1
         while left < right and array[right] == array[right - 1]:
-            right = right - 1
+            right -= 1
 
         mid = left + (right - left) // 2
 

@@ -85,8 +85,8 @@ def tandemBicycle(redShirtSpeeds, blueShirtSpeeds, fastest):
     Given k-number of workers & an even array of tasks durations. Each worker is expected to complete 2 tasks, 
     return the optimal assignment of tasks to each worker such that the tasks are completed as fast as possible.
     
-    Your function should return a list of pairs, where each pair stores the indices of the tasks that should be completed by
-    one worker.  
+    Your function should return a list of pairs, where each pair stores the indices of the tasks that should be
+     completed by one worker.  
     e,g : k=3 tasks=[1, 3, 5, 3, 1, 4] --> 
     [
         [0,2],

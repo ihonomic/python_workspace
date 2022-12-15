@@ -46,7 +46,10 @@ class MinHeap:
 
     # 0(n) time
     def buildHeap(self, array):
+        # Heapify - start building heap from the middle
         # get the first parentIdx by obtaining the last parent, and then reverse it
+
+        # [3,7,|1|,2,5,6,8] --> [3,1,|7|,2,5,6,8] --> [1,3,|7|,2,5,6,8]
         firstParentIdx = (len(array) - 2) // 2
         for currentIdx in reversed(range(firstParentIdx + 1)):
             self.siftDown(currentIdx, len(array) - 1, array)
