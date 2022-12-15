@@ -1,3 +1,6 @@
+# https://leetcode.com/problems/validate-binary-search-tree/solutions/786520/general-tree-traversal-problems-interview-prep/
+
+
 """" Question 1 - Find Closest Value in BST
     Given a value , transverse the BST to find the value that is closest to it
     METHOD 1: # Average: 0(logn) time | 0(1) space
@@ -182,13 +185,15 @@ class BST:
     METHOD 1: # 0(n) time | 0(d) space. d is the longest depth of the tree.
         - Just check if the previous element is greater/equal than the next 
          (Same with flatterning a tree into singly linked list)
+          # Fun fact: Inorder traversal leads to a sorted array if it is 
+            # a Valid Binary Search. Tree.
 """
 
 
 def validateBst(tree):
     output = inOrderTraversal(tree, [])
     for i in range(1, len(output)):
-        if output[i - 1] >= output[i]: # so
+        if output[i - 1] >= output[i]:  # so
             return False
     return True
 
@@ -208,12 +213,30 @@ def inOrderTraversal(tree, array):
 
 
 def inOrderTraverse(tree, array):
-    # 0(n) time | 0(n) space
+    # 0(n) time | 0(n) space - Recursively
     if tree is not None:
         inOrderTraverse(tree.left, array)
         array.append(tree.value)
         inOrderTraverse(tree.right, array)
     return array
+
+    def inorderTraversal(self, root):
+        # 0(n) time | 0(n) space - Iteratively
+        output = []
+        stack = []
+
+        while stack or root:
+
+            if root:
+                stack.append(root)
+                root = root.left
+
+            else:
+                temp = stack.pop()
+                output.append(temp.val)
+                root = temp.right
+
+        return output
 
 
 def preOrderTraverse(tree, array):

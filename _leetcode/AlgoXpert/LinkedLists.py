@@ -281,6 +281,7 @@ def findLoop(head):
 
 
 def reverseLinkedList(head):
+    # Singly
     prev = None
     current = head
     while current:
@@ -291,6 +292,21 @@ def reverseLinkedList(head):
 
         current = next
 
+    return prev
+
+
+def reverse_double_linked_list(head):
+    # Doubly
+    prev = None
+    current = head
+    while current:
+        next = current.next
+
+        current.next = prev
+        current.prev = next
+        prev = current
+
+        current = next
     return prev
 
 
@@ -343,7 +359,6 @@ def mergeLinkedLists(headOne, headTwo):
 
 
 def shiftLinkedList(head, k):
-
     listLength, lastNode = getListLengthAndLastNode(head)
 
     k = k % listLength  # handle wrapping
@@ -399,7 +414,6 @@ def getListLengthAndLastNode(head):
     - Use a double linkedlist and a dict, whatever value that was recently requested or inserted, set it as the head
     - If a new pair is entered and the maxSize has reached, remove the tail
 """
-
 
 """ Question 10 - Rearrange Linked List
     Write a func that takes in the head of a linkedlists and an interger k, rearrange the list in-place
@@ -499,7 +513,6 @@ class LinkedList:
 
 
 def zipLinkedList(linkedList):
-
     if linkedList.next is None or linkedList.next.next is None:
         return linkedList
 

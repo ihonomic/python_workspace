@@ -211,10 +211,10 @@ def smallestDifference(arrayOne, arrayTwo):
         secondNum = arrayTwo[right]
 
         if firstNum < secondNum:
-            current = (secondNum) - (firstNum)
+            current = secondNum - firstNum
             left += 1
         elif secondNum < firstNum:
-            current = (firstNum) - (secondNum)
+            current = firstNum - secondNum
             right += 1
         else:
             return [firstNum, secondNum]  # if diff is 0.
@@ -232,6 +232,21 @@ def smallestDifference(arrayOne, arrayTwo):
     Method 1 - Two pointers, On the left side keep looping until the target is found, on the right side keep looping until a non-target is
         found, swap them. 
 """
+
+
+def moveElementToEnd(array, toMove):
+    # This maintains the order
+    elementIdx = 0
+    for idx in range(len(array)):
+        if array[idx] != toMove:
+            swap(idx, elementIdx, array)
+            elementIdx += 1
+
+    return array
+
+
+def swap(i, j, array):
+    array[i], array[j] = array[j], array[i]
 
 
 def moveElementToEnd(array, toMove):
