@@ -228,9 +228,227 @@ def numberOfWaysToTraverseGraph(width, height):
 
     NOTE: There are three operations. Insertion, deletion and substitution of a character for another. 
     e.g: str1 = "abc" 
-    str2 = "yabd"
+          str2 = "yabd"
     --> 2 // insert "y" ; substitute "c" for "d"
 
-    Method: 
+    Method:  0(nm) time | 0(nm) space
+        editTable - 2D number of operations to perfom to turn s1 into s2 
+         s1 = abc s2 = yabd
+            "" y a b d 
+        ""  0  1 2 3 4
+        a   1  1 1 2 3
+        b   2  2 2 1 2
+        c   3  3 3 2 2
+
+        - Consider empty strings
+        - if horizontal char is equal to vertical char, choose the diagonal value
+        - BUT whenever a horizontal char is being compared with the vertical char, 
+        just consider 3 neigbors value, pick the minimum & add 1
+
+        if str1[row-1] == str2[col-1]:
+            editTable[row][col] = editTable[row-1][col-1]
+        else:
+            editTable[row][col] = 1 + min(
+                                        editTable[row][col-1], 
+                                        editTable[row-1][col], 
+                                        editTable[row-1][col-1], 
+                                        )
+"""
+
+
+def levenshteinDistance(str1, str2):
+    # Assuming str1="abc", str2="yabd"
+    edits = [[x for x in range(len(str1) + 1)] for y in range(len(str2) + 1)]
+
+    # [
+    #     [0, 1, 2, 3],
+    #     [0, 1, 2, 3],
+    #     [0, 1, 2, 3],
+    #     [0, 1, 2, 3],
+    #     [0, 1, 2, 3]
+    # ]
+    for i in range(1, len(str2) + 1):
+        edits[i][0] = edits[i - 1][0] + 1
+    # [
+    #     [0, 1, 2, 3],
+    #     [1, 1, 2, 3],
+    #     [2, 1, 2, 3],
+    #     [3, 1, 2, 3],
+    #     [4, 1, 2, 3]
+    # ]
+    for i in range(1, len(str2) + 1):
+        for j in range(1, len(str1) + 1):
+            if str2[i - 1] == str1[j - 1]:
+                edits[i][j] = edits[i - 1][j - 1]
+            else:
+                edits[i][j] = 1 + min(
+                    edits[i][j - 1], edits[i - 1][j], edits[i - 1][j - 1]
+                )
+    # [
+    #     [0, 1, 2, 3],
+    #     [1, 1, 2, 3],
+    #     [2, 1, 2, 3],
+    #     [3, 2, 1, 2],
+    #     [4, 3, 2, 2]
+    # ]
+
+    return edits[-1][-1]
+
+
+""" Question 6 - Max Sum Increasing Subsequence
+Write a func that takes an array of integers and returns the greatest sum that can be generated from a STRICTLY
+INCREASING SUBSEQUENCE in the array. (Unlike kadane, there can be negative values and not strictly increasing)
+
+NOTE: Each element is a subsequence of its array, so also its a set of numbers that aint necessary adjacent but maintain the 
+    order. [1,3,4] is a subsequence of [1,2,3,4,5]
+
+e.g:  array=[10, 70, 20 ,30, 50, 11, 30] --> 110, [10, 20, 30, 50 ]
+Method: 0(n^2) time | 0(n) space
+    The idea: For every index, determine the maximum sum including itself at that point
+    i.e compare current number with numbers starting from the beginning to current
 
 """
+
+
+def maxSumIncreasingSubsequence(array):
+
+    # Build 1
+    # stores the indexes
+    sequences = [None for _ in array]
+
+    # Build 2
+    # stores the greatest sum subsequence at each index
+    sums = array[:]
+
+    maxSumIdx = 0
+
+    for i in range(len(array)):
+        currentNum = array[i]
+        # check previous numbers before it
+        for j in range(0, i):
+            otherNum = array[j]
+            if otherNum < currentNum and sums[j] + currentNum >= sums[i]:
+                sums[i] = sums[j] + currentNum
+                sequences[i] = j
+
+        # Is the current idx the greatest sum? Record it
+        if sums[i] >= sums[maxSumIdx]:
+            maxSumIdx = i
+
+    return [max(sums), buildSequence(array, sequences, maxSumIdx)]
+
+
+def buildSequence(array, sequences, currentIdx):
+
+    result = []
+    # end when currentIdx becomes None
+    while currentIdx is not None:
+        result.append(array[currentIdx])
+        currentIdx = sequences[currentIdx]
+
+    return result[::-1]  # reverse it because it values were appended from the last
+
+
+""" Question 7 - Longest common subsequence
+Write a func that takes two strings and returns their common subsequences
+
+
+e.g:  str1='ZXVVYZW' str2='XKYKZPW' --> ["X", "Y", "Z", "W"]
+Method: 0(nm) time | 0(nm) space
+
+"""
+
+
+def longestCommonSubsequence(str1, str2):
+    # Assume str1='ZXVVYZW' str2='XKYKZPW'
+    commonStrs = [["" for _ in range(len(str2) + 1)] for _ in range(len(str1) + 1)]
+    # [
+    #     ['', '', '', '', '', '', '', ''],
+    #     ['', '', '', '', '', '', '', ''],
+    #     ['', '', '', '', '', '', '', ''],
+    #     ['', '', '', '', '', '', '', ''],
+    #     ['', '', '', '', '', '', '', ''],
+    #     ['', '', '', '', '', '', '', ''],
+    #     ['', '', '', '', '', '', '', ''],
+    #     ['', '', '', '', '', '', '', '']
+    # ]
+    for i in range(1, len(str1) + 1):
+        for j in range(1, len(str2) + 1):
+            # if both strings character are same, take the diagonal and append with current
+            if str1[i - 1] == str2[j - 1]:
+                commonStrs[i][j] = commonStrs[i - 1][j - 1] + str1[i - 1]
+            else:
+                top = commonStrs[i - 1][j]
+                left = commonStrs[i][j - 1]
+                # choose the longest string from the left & top neighbor
+                commonStrs[i][j] = max(top, left, key=len)
+
+    # [
+    #     ['', '', '', '', '', '', '', ''],
+    #     ['', '', '', '', '', 'Z', 'Z', 'Z'],
+    #     ['', 'X', 'X', 'X', 'X', 'Z', 'Z', 'Z'],
+    #     ['', 'X', 'X', 'X', 'X', 'Z', 'Z', 'Z'],
+    #     ['', 'X', 'X', 'X', 'X', 'Z', 'Z', 'Z'],
+    #     ['', 'X', 'X', 'XY', 'XY', 'XY', 'XY', 'XY'],
+    #     ['', 'X', 'X', 'XY', 'XY', 'XYZ', 'XYZ', 'XYZ'],
+    #     ['', 'X', 'X', 'XY', 'XY', 'XYZ', 'XYZ', 'XYZW']
+    # ]
+
+    return list(commonStrs[-1][-1])
+
+
+""" Question 8 - Minimum Number of Jumps
+Given an array of positive integers where each interger represents the maximum number of steps forward in the 
+array. For example if the element at index 1 is 3, you can go from index 1 to index 2, 3, or 4.
+
+Write a func that returns the minimum number of jumps needed to reach the final index. 
+
+NOTE; Jumping from index i to index i + x always constituents one jump, no matter how large x is.
+e.g:  array =[3, 4, 2, 1, 2, 3, 7, 1, 1, 1, 3] --> 4 // 3 --> (4 or 2) --> (2 or 3) --> 7 --> 3
+Method: 0(n^2) time | 0(n) space
+     for every current index, check from the beginning if we can jump to the current
+     
+Method: 0(n) time | 0(1) space
+
+"""
+
+
+def minNumberOfJumps(array):
+    # [3, 4, 2, 1, 2, 3, 7, 1, 1, 1, 3]
+    # 3 -> 4 -> 3 -> 7
+
+    jumps = [float("inf") for _ in array]
+
+    # To jump to the first is 0 jumps
+    jumps[0] = 0
+
+    # for every current index,
+    # check from the beginning if we can jump to the current
+    for i in range(1, len(array)):
+        for j in range(0, i):
+            # can you reach i from j?
+            if array[j] + j >= i:
+                jumps[i] = min(jumps[j] + 1, jumps[i])
+
+    return jumps[-1]
+
+
+def minNumberOfJumps(array):
+    if len(array) == 1:
+        return 0
+
+    jumps = 0
+    maxReach = array[0]
+    steps = array[0]
+    for i in range(1, len(array) - 1):  # we don't need to get to final index
+        maxReach = max(maxReach, array[i] + i)
+        steps -= 1
+
+        # Are we out of steps?
+        if steps == 0:
+            jumps += 1
+            steps = (
+                maxReach - i
+            )  # how many steps do we need to get to maxReach from current position?
+
+    return jumps + 1
