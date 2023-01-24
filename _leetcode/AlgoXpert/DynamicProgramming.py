@@ -452,3 +452,157 @@ def minNumberOfJumps(array):
             )  # how many steps do we need to get to maxReach from current position?
 
     return jumps + 1
+
+
+""" Question 9 - Knapsack problem
+    An array of items(array). Each item array has two values, the first represent it's value
+    and the second represent its weight. 
+    You're also given a value which represent the maximum weight capacity
+
+    Fit into the knapsack items of maximized values and make sure the sum of their weights doesn't 
+    exceed maximum weight capacity 
+
+    Consider their combined value as you pick, as well as each item indices of how you 
+    intend to arrange them in the knapsack
+
+    Write a function that returns the maximized combined value of the items and the chosen item indices
+    e.g:  items=[[1,2], [4,3], [5,6], [6,7]] capacity=10
+                       [value(v), weight(w)] 
+                    -->  [
+                            10, // total value 
+                            [1, 2], // item indices
+                        ]
+
+    Method: 0(nc) time | 0(nc) space - c is the maximum capacity 
+
+"""
+
+
+def knapsackProblem(items, capacity):
+    # items=[[1,2], [4,3], [5,6], [6,7]] capacity=10
+    # [value(v), weight(w)]
+
+    knapsackValues = [
+        [0 for _ in range(0, capacity + 1)] for _ in range(len(items) + 1)
+    ]
+
+    #  (w)     0 1 2 3 4 5 6 7 8 9 10
+    # [ ]       0 0 0 0 0 0 0 0 0 0 0
+    # [1,2]   0 0 0 0 0 0 0 0 0 0 0
+    # [4,3]   0 0 0 0 0 0 0 0 0 0 0
+    # [5,6]   0 0 0 0 0 0 0 0 0 0 0
+    # [6,7]   0 0 0 0 0 0 0 0 0 0 0
+
+    for i in range(1, len(items) + 1):
+        currentWeight = items[i - 1][1]  # i-1 because of the additonal row
+        currentValue = items[i - 1][0]
+        for c in range(0, capacity + 1):
+            if currentWeight > c:
+                knapsackValues[i][c] = knapsackValues[i - 1][c]
+            else:
+                knapsackValues[i][c] = max(
+                    knapsackValues[i - 1][c],
+                    knapsackValues[i - 1][c - currentWeight] + currentValue,
+                )
+
+    #  (w)    0 1 2 3 4 5 6 7 8 9 10
+    # [ ]     0 0 0 0 0 0 0 0 0 0 0
+    # [1,2]   0 0 1 1 1 1 1 1 1 1 1
+    # [4,3]   0 0 1 4 4 5 5 5 5 5 5
+    # [5,6]   0 0 1 4 4 5 5 5 6 9 9
+    # [6,7]   0 0 1 4 4 5 5 6 6 9 10
+
+    # EXPLANATION: if the current item's weight is less than the weight being considered (w).
+    # That means it can fit into the bag, but we need to know if it can fit together
+    # with the previous item. PRIORITY: choose the one with maximum value
+
+    # Choose the maximum between the top and the current value(added to the top - weight)
+
+    # if w <= j:
+    # values[i][j] = max(
+    #             values[i-1][j],
+    #             values[i-1][j-w] + v,
+    #         )
+    # else:
+    # values[i][j] = values[i-1][j]
+
+    return [knapsackValues[-1][-1], getknapsackItems(knapsackValues, items)]
+
+
+def getknapsackItems(knapsackValues, items):
+    # TO GET THE ITEMS indices THAT WAS CHOOSEN
+    # We need to backtrack, our item can only be considered in the bag if
+    # the value isnt the same as that at the top
+
+    # We keep moving top if current value is the same as the top, else, we add item because the item was
+    # used, we move top but left-side of the top - weight. This continue until we jump to
+    # the first row
+    sequence = []
+    i = len(knapsackValues) - 1
+    c = len(knapsackValues[0]) - 1
+    while i > 0:
+        if knapsackValues[i][c] == knapsackValues[i - 1][c]:
+            i -= 1
+        else:
+            sequence.append(i - 1)  # because we've additonal row
+            c -= items[i - 1][1]
+            i -= 1
+    # because, we built sequence using backtracking, so we reverse it
+    sequence.reverse()
+
+    return sequence
+
+
+""" Ones and Zeros
+    Given an array of binary strings strs and 2 intergers m & n . 
+    Return the size of the largest subset of strs  such that there are at most m 0's & n 1's in the subset. 
+
+    e.g:  strs = ["10","0001","111001","1","0"], m = 5, n = 3   --> 4 // {"10", "0001", "1", "0"}
+            strs = ["10","0","1"], m = 1, n = 1  -->  2 // {"0", "1"}
+
+    Method: 
+
+"""
+
+
+def findMaxForm(strs: list, M: int, N: int) -> int:
+    dp = [[0 for _ in range(N + 1)] for _ in range(M + 1)]
+
+    # [
+    #     [0, 0, 0, 0],
+    #     [0, 0, 0, 0],
+    #     [0, 0, 0, 0],
+    #     [0, 0, 0, 0],
+    #     [0, 0, 0, 0],
+    #     [0, 0, 0, 0]
+    # ]
+    for char in strs:
+        zeros = char.count("0")
+        ones = char.count("1")
+        for i in range(M, zeros - 1, -1):
+            for j in range(N, ones - 1, -1):
+                dp[i][j] = max(dp[i][j], dp[i - zeros][j - ones] + 1)
+
+    # [
+    #     [0, 1, 1, 1],
+    #     [1, 2, 2, 2],
+    #     [1, 2, 3, 3],
+    #     [1, 2, 3, 3],
+    #     [1, 2, 3, 3],
+    #     [1, 2, 3, 4]
+    # ]
+
+    return dp[-1][-1]
+
+
+# Bounded 0/1 Knapsack problems
+# LC 416. Partition Equal Subset Sum
+# LC 494. Target Sum
+# LC 474. Ones and Zeroes
+# LC 343. Integer Break
+
+# Unbounded 0/1 Knapsack problems
+# LC 322. Coin Change
+# LC 518. Coin Change 2
+# LC 377. Combination Sum IV
+# LC 983. Minimum Cost For Tickets
