@@ -606,3 +606,76 @@ def findMaxForm(strs: list, M: int, N: int) -> int:
 # LC 518. Coin Change 2
 # LC 377. Combination Sum IV
 # LC 983. Minimum Cost For Tickets
+
+
+""" Question 10 - Disk Stacking
+    Given an array of arrays where each subarrays hold 3 integers and represent a disk. The intergers are the weight, depth & height
+    respectively. Your goal is to stack up the disks and maximize the total height of the stack. A disk must have a strictly 
+    smaller width, depth & height than any other disk below it. 
+
+    Write a func that returns an array of the disks in the final stack starting with the top disk and ending with the bottom disk.
+    Note that you can't rotate disks. i.e the intergers in each subarray must represent [width, depth, height] at all times.
+    e.g:  [[2, 1, 2], [3, 2, 3], [2, 2, 8], [2, 3, 4], [1, 3, 1], [4, 4, 5]] -->  [[2, 1, 2], [3, 2, 3], [4, 4, 5]]
+        // 10 (2+3+5) is the tallest height we can get 
+    NOTE: Each width, depth & height is ascending 
+    Method: 0(n^2) time | 0(n) space
+
+"""
+
+
+def diskStacking(disks):
+    # [[2, 1, 2], [3, 2, 3], [2, 2, 8], [2, 3, 4], [1, 3, 1], [4, 4, 5]]
+    # Sort the disks by their height
+    disks.sort(key=lambda disk: disk[2])
+    # [[1, 3, 1], [2, 1, 2], [3, 2, 3], [2, 3, 4], [4, 4, 5], [2, 2, 8]]
+
+    # store the heights in another array
+    heights = [disk[2] for disk in disks]
+    # [1, 2, 3, 4, 5, 8]
+
+    # store the index of the previous disk that comes ontop of another one
+    sequences = [None for disk in disks]
+    # [None, None, None, None, None, None]
+
+    # keep track of the maximum height
+    maxHeightIdx = 0
+
+    # compare previous disks with the current disk and ensure w, d & h are valid
+    for i in range(1, len(disks)):
+        currentDisk = disks[i]
+        for j in range(0, i):
+            otherDisk = disks[j]
+            sumOfHeights = currentDisk[2] + heights[j]
+            isCurrentHeightLessOrEqualToBoth = heights[i] <= sumOfHeights
+            if (
+                areValidDimensions(otherDisk, currentDisk)
+                and isCurrentHeightLessOrEqualToBoth
+            ):
+                # it's valid, update the height of current disk
+                heights[i] = sumOfHeights
+                # keep track of the otherDisk index that is valid but at the currentDisk location
+                sequences[i] = j
+
+        # update the maximum height found
+        if heights[i] >= heights[maxHeightIdx]:
+            maxHeightIdx = i
+
+    # disks=[[1, 3, 1], [2, 1, 2], [3, 2, 3], [2, 3, 4], [4, 4, 5], [2, 2, 8]]
+    # heights=[1, 2, 5, 4, 10, 8]
+    # sequences=[None, None, 1, None, 2, None]
+
+    return buildSequence(disks, sequences, maxHeightIdx)
+
+
+def areValidDimensions(o, c):
+    return o[0] < c[0] and o[1] < c[1] and o[2] < c[2]
+
+
+def buildSequence(array, sequences, currentIdx):
+    # sequences=[None, None, 1, None, 2, None]
+    result = []
+    while currentIdx is not None:
+        result.append(array[currentIdx])
+        currentIdx = sequences[currentIdx]
+    # [bottomDisk, secondBottomDisk, thirdBottomDisk,... topDisk]
+    return list(reversed(result))
