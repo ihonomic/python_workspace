@@ -19,7 +19,7 @@ def caesarCipherEncryptor(string, key):
 
         numbers[i] = chr(numbers[i])
 
-    return ''.join(numbers)
+    return "".join(numbers)
 
     def caesarCipherEncryptor(string, key):
         # 0(n) time | 0(n) space
@@ -31,7 +31,7 @@ def caesarCipherEncryptor(string, key):
         for i, n in enumerate(numbers):
             numbers[i] = letters[n]
 
-        return ''.join(numbers)
+        return "".join(numbers)
 
 
 """ Question 2 - Run Length Encoding 
@@ -47,7 +47,7 @@ def caesarCipherEncryptor(string, key):
 
 def runLengthEncoding(string):
     # 0(n) time | 0(1) space
-    res = ''
+    res = ""
     count = 1
     i = 0
 
@@ -130,7 +130,7 @@ def longestPalindromicSubstring(string):
 
     for i in range(len(string)):
         for j in range(i + 1, len(string)):
-            substring = string[i:j + 1]
+            substring = string[i : j + 1]
             if is_palindrome(substring) and len(substring) > len(res):
                 res = substring
     return res
@@ -162,7 +162,7 @@ def longestPalindromicSubstring(string):
         # Return the greater difference
         sliceIndexes = max(sliceIndexes, longest, key=lambda x: x[1] - x[0])
 
-    return string[sliceIndexes[0]:sliceIndexes[1]]
+    return string[sliceIndexes[0] : sliceIndexes[1]]
 
 
 """ Question 6 - Group anagrams 
@@ -182,7 +182,7 @@ def groupAnagrams(words):
     def rearrange(word):
         alphabet = list(word)
         alphabet.sort()
-        return ''.join(alphabet)
+        return "".join(alphabet)
 
     # -----
     strs = words
@@ -231,8 +231,13 @@ def validIPAddresses(string):
                 three = string[j:k]
                 four = string[k:]
 
-                if isValidPart(one) and isValidPart(two) and isValidPart(three) and isValidPart(four):
-                    validIps.append('.'.join([one, two, three, four]))
+                if (
+                    isValidPart(one)
+                    and isValidPart(two)
+                    and isValidPart(three)
+                    and isValidPart(four)
+                ):
+                    validIps.append(".".join([one, two, three, four]))
     return validIps
 
 
@@ -267,7 +272,11 @@ def reverseWordsInString(string):
     slow, fast = 0, 1
     while slow < len(string):
         # find the next word
-        while fast < len(string) and not string[slow].isspace() and not string[fast].isspace():
+        while (
+            fast < len(string)
+            and not string[slow].isspace()
+            and not string[fast].isspace()
+        ):
             fast += 1
         word = string[slow:fast]
         newString.append(word)
@@ -288,7 +297,7 @@ def reverseWordsInString(string):
 
     # Reverse list
     reverseList(newString)
-    return ''.join(newString)
+    return "".join(newString)
 
 
 """Question 9 - Minimum character of words, 
@@ -334,7 +343,7 @@ def longestSubstringWithoutDuplication(string):
 
     while left < len(string):
         while right < len(string) and string[right] not in string[left:right]:
-            res = max([res, string[left:right + 1]], key=len)
+            res = max([res, string[left : right + 1]], key=len)
             right += 1
         left += 1
     return res
@@ -389,15 +398,15 @@ def underscorifySubstring(string, substring):
             # Detect if index is at even or odd position
             is_even = indexes.index(i) % 2
             if not is_even:
-                newString += '_'
+                newString += "_"
                 newString += s
             else:
                 newString += s
-                newString += '_'
+                newString += "_"
 
         # Handle cases where there are repeated indexes. [0, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10,]
         elif i in indexes and indexes.count(i) > 1:
-            newString += f'_{s}_'
+            newString += f"_{s}_"
 
         else:
             newString += s
@@ -437,15 +446,15 @@ def smallestSubstringContaining(bigString, smallString):
 
             slicedPortion = bigString[slow:fast]
             if is_validSubstring(slicedPortion, smallString):
-                result = min([result, slicedPortion],
-                             key=len) if result else slicedPortion
+                result = (
+                    min([result, slicedPortion], key=len) if result else slicedPortion
+                )
             fast += 1
 
         # Last Run.
         slicedPortion = bigString[slow:fast]
         if is_validSubstring(slicedPortion, smallString):
-            result = min([result, slicedPortion],
-                         key=len) if result else slicedPortion
+            result = min([result, slicedPortion], key=len) if result else slicedPortion
 
         slow += 1
 
@@ -491,7 +500,7 @@ def longestBalancedSubstring(string):
 
     for i in range(len(string) + 1):
         for j in range(i + 1, len(string)):
-            subString = string[i:j + 1]
+            subString = string[i : j + 1]
             if is_balanced(subString):
                 maxLength = max(maxLength, len(subString))
 
@@ -590,7 +599,7 @@ def patternMatcher(pattern, string):
 
             yIdx = firstYPosition * lenOfX
             x = string[:lenOfX]
-            y = string[yIdx: yIdx + lenOfY]
+            y = string[yIdx : yIdx + lenOfY]
 
             potentialMatch = map(lambda char: x if char == "x" else y, newPattern)
 
@@ -618,6 +627,38 @@ def getNewPattern(pattern):
 
 """ Question 15 - Palindromic Check
 """
+
+
+""" Question 16 - Semordnilap 
+    Write a func that takes a list of strings and return a list of semiordnilap pairs. 
+    A semiordnilap is defined as a set of strings where the reverse of one word is the same of
+    as the forward version of the other.
+    e.g --> diaper -- repaid 
+        --> palindromes -- semordnilap 
+    words = ["diaper", "abc", "test", "cba", "repaid"] --> [["diaper", "repaid"], ["abc", "cba"]]
+    METHOD: 
+    Reverse each word and check if exist about its current index (rounded list)
+    If it does, save the pair to be skipped next time.
+
+"""
+
+
+def semordnilap(words):
+    result = []
+    seenPair = []
+
+    for i, s in enumerate(words):
+        # we don't need to check the word, if its only paired
+        if i in seenPair:
+            continue
+
+        roundedList = words[i + 1 :] + words[:i]
+        reversedChar = s[::-1]
+        if reversedChar in roundedList:
+            result.append([s, reversedChar])
+            seenPair.append(words.index(reversedChar))
+
+    return result
 
 
 if __name__ == "__main__":

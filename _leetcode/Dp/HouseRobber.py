@@ -7,8 +7,8 @@
     Input: nums = [2,7,9,3,1]
     Output: 12
     METHOD:
-    `   - for every house, check the maximum you can rob from the house plus the sum from the house before it's PREVIOUS
-            and then the sum of the PREVIOUS
+    `   - for every house, check the maximum you can rob from the current house plus the house before the PREVIOUS
+            and then the PREVIOUS
 """
 
 
@@ -78,7 +78,6 @@ def helper(self, nums):
 
 
 def rob(root) -> int:
-
     def dfs(root):
         if root is None:
             return [0, 0]

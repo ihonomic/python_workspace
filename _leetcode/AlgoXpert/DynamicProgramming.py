@@ -295,6 +295,22 @@ def levenshteinDistance(str1, str2):
     return edits[-1][-1]
 
 
+def levenshteinDistance(str1, str2):
+    # if one is empty, return the length of the other
+    if not str1 or not str2:
+        return len(str2) + len(str1)
+
+    # if first characters match, drop both
+    if str1[0] == str2[0]:
+        return levenshteinDistance(str1[1:], str2[1:])
+
+    return 1 + min(
+        levenshteinDistance(str1, str2[1:]),  # what if we drop from string2 ?
+        levenshteinDistance(str1[1:], str2),  # what if we drop from string1 ?
+        levenshteinDistance(str1[1:], str2[1:]),  # what if we drop from both ?
+    )
+
+
 """ Question 6 - Max Sum Increasing Subsequence
 Write a func that takes an array of integers and returns the greatest sum that can be generated from a STRICTLY
 INCREASING SUBSEQUENCE in the array. (Unlike kadane, there can be negative values and not strictly increasing)
