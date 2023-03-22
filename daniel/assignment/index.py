@@ -49,19 +49,23 @@ def search_files(digitized_files, key):
     We search for the keyword, if found, we return the entire file content
     otherwise we return None
     """
+    # Refuse searching for single character
+    if len(key) <= 1:
+        return "Keyword not valid"
 
+    keys_found = []
     for file in digitized_files:
         data_ = open(file, "r").readlines()
         for each_line in data_:
             if key in each_line:
-                return data_
+                keys_found.append(each_line)
 
-    return None
+    return keys_found if keys_found else None
 
 
 digitized_files = load_BE_data_files(os.getcwd())
 values = get_list_of_all_values(digitized_files, "MF")
 print("[values found:]", values)
 
-found = search_files(digitized_files, "CF4")
-print("[search found:]", found)
+result_found = search_files(digitized_files, "MF")
+print("[search found:]", result_found)
