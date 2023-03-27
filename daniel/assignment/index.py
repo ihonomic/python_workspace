@@ -69,3 +69,11 @@ print("[values found:]", values)
 
 result_found = search_files(digitized_files, "MF")
 print("[search found:]", result_found)
+
+Search_found = [1, 2]
+
+for i in Search_found:
+    file = digitized_files[i]
+    data_ = open(file, "r").read()
+    print(f"[Folder {i}:] {data_}")
+    print()

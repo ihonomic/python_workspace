@@ -1,3 +1,6 @@
 {
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "genieai.personalizedName": "ChatGPT - Genie",
+    "genieai.openai.model": "gpt-3.5-turbo",
+    "genieai.openai.organization": ""
 }

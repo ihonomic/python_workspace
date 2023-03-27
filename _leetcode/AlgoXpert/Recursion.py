@@ -127,10 +127,240 @@ def powerset(array):
 
 
 """ Question 5: Phone Number mnemonics 
-    Write a func that takes i
+    The phone pad of your phone, almost every digit is associated with an alphabet 
+    8464747328 = timisgreat
+    2686463 = antoine OR ant6468
+    Note: A number can represent multiple alphabets, e.g (2 - abc)
+    ------   -----   -----
+    |     | |     | |     |
+    |  1  | |  2  | |  3  |
+    |     | | abc | | def |
+    ------   -----   -----
+    |     | |     | |     |
+    |  4  | |  5  | |  6  |
+    | ghi | | jkl | | mno |
+    ------   -----   -----
+    |     | |     | |     |
+    |  7  | |  8  | |  9  |
+    | pqrs| | tuv | | wxyz|
+    ------   -----   -----
+            |     | 
+            |  0  | 
+            |     | 
+            -------
     
+    A mnemonic is defined as a pattern of ideas, character, associations that helps one in remembering something.
+    Companies often use mnemonic for their phone number to make it easeir to remember. 
 
-    e.g: 
+    Write a func that takes a string of phone numbers and returns all mnemonics for the phone number in any order.
 
-    METHOD: 0
+    e.g: phoneNumber = "1905" -> ['1w0j', '1w0k', '1w0l', '1x0j', '1x0k', '1x0l', '1y0j', '1y0k', '1y0l', '1z0j', '1z0k', '1z0l']
+
+    METHOD: 0(4^n * n) time | 0(4^n * n) space
+        We need to keep track of the current mnemonics, anytime there is a chnage at any point, we go all the way to chnage the others
+        to the end. 
+        If we're at the end, we've reach out base base, append it to the result. 
+
 """
+
+
+def phoneNumberMnemonics(phoneNumber):
+    # current mnemonic we're generating
+    currentMnemonic = ["0"] * len(phoneNumber)
+
+    # save all the mnemonic we've found
+    result = []
+
+    phoneNumberMnemonicsHelper(0, phoneNumber, currentMnemonic, result)
+    return result
+
+
+def phoneNumberMnemonicsHelper(idx, phoneNumber, currentMnemonic, result):
+    # Base case - if we're at currentMnemonic's last character, then we conclude we've generated a case
+    if idx == len(phoneNumber):
+        mnemonic = "".join(currentMnemonic)
+        result.append(mnemonic)
+    else:
+        digit = phoneNumber[idx]
+        letters = DIGIT_LETTERS[digit]
+
+        for letter in letters:
+            # Chnage the current idx letter and move to the next
+            currentMnemonic[idx] = letter
+            phoneNumberMnemonicsHelper(idx + 1, phoneNumber, currentMnemonic, result)
+
+
+DIGIT_LETTERS = {
+    "0": ["0"],
+    "1": ["1"],
+    "2": ["a", "b", "c"],
+    "3": ["d", "e", "f"],
+    "4": ["g", "h", "i"],
+    "5": ["j", "k", "l"],
+    "6": ["m", "n", "o"],
+    "7": ["p", "q", "r", "s"],
+    "8": ["t", "u", "v"],
+    "9": ["w", "x", "y", "z"],
+}
+
+
+""" Question 6: Staircase Traversal 
+    Given 2 intergers, representing the height of a staircase, and the maximum number of steps that you can advance up 
+    the staircase at a time, Write a func that returns the number of ways in which you can climb the staircase 
+
+    NOTE: maxSteps <= height 
+    e.g: height = 3, maxSteps = 2 --> 3 ways ((1,1,1), (1,2), (2,1))
+         height = 4, maxSteps = 2 --> 5 ways ((1,1,1,1), (1,1,2), (1,2,1), (2,1,1), (2,2))
+
+    There is 1 way to get to height 0 (DO NOTHING)
+    There is 1 way to get to height 1 
+    There is 2 ways to get to height 2 
+    There is 3 ways to get to height 3 
+    There is 5 ways to get to height 5 
+
+    THE PATTERN: Depending on the maxSteps, that's how deep we need to sum the previouses to get the current, 
+    - if maxSteps = 2, The sum of the previous two, gives the current 
+    - if maxSteps = 3, The sum of the previous three, gives the current 
+
+    METHOD: 0(n) time | 0(n) space 
+        
+"""
+
+
+def staircaseTraversal(height, maxSteps):
+    # Create a list of zeros with length equal to height + 1
+    # (because we start counting stairs from 0)
+    numberOfWaysToStairs = [0] * (height + 1)
+
+    # Set the number of ways to climb 0 and 1 staircases to 1 since there is only one way to do it.
+    numberOfWaysToStairs[0] = 1
+    numberOfWaysToStairs[1] = 1
+
+    # Loop through each staircase from 2 up to and including the total number of stairs
+    for i in range(2, height + 1):
+        # To calculate number of ways to reach the current stair,
+        # consider only the maxSteps previous stairs
+        # (or all stairs if there are fewer than maxSteps stairs before the current stair).
+        # This is done by using a sliding window approach where the start index is at i-maxSteps,
+        # but not less than 0 (as stairs can't have negative indices).
+        start = i - maxSteps if i - maxSteps >= 0 else 0
+        endIdx = i
+
+        # Extract a subarray from the numberOfWaysToStairs list containing the relevant stairs
+        sub_array = numberOfWaysToStairs[start:endIdx]
+
+        # The number of ways to reach the ith staircase is the sum of the number of
+        # ways to reach the maxSteps preceding stairs.
+        numberOfWaysToStairs[i] = sum(sub_array)
+
+    # Return the number of ways to reach the top of the staircase (i.e. last element of the numberOfWaysToStairs list)
+    return numberOfWaysToStairs[-1]
+
+
+""" Question 7: Lowest common manager
+    Given 3 inputs (topManager, reportOne, reportTwo) of an organisation charts (OrgChart) that have a (directReports) pointing to the
+    employees under them. i.e each person has a list of employee under them.  Write an algorithm that returns the lowest common manager of 
+    reportOne and reportTwo
+    
+    e.g:                               topManager = Node A
+                                        reportOne = Node E 
+                                        reportTwo = Node I 
+                                        A
+                                     /   \
+                                    B    C
+                                  / \   / \
+                                D   E F   G 
+                              /  \ 
+                            H    I 
+        --> Node B 
+
+    METHOD 1:  0(d) time | 0(n) space
+        NOTE: This question is common to "Youngest common ancestor" in Graphs. CHECK 
+        I used the same procedure to solve the problem but couldnt pass all test cases. In this case, 
+        there was no pointer to the ancestor, so I used a hashMap to keep track of all the ancestor, 
+        then I saved history of the ancestor already visited from reportOne, and when going through the 
+        ancestor of reportTwo, if i find any one already saved, then thats a common ancestor. 
+
+    METHOD 2: 0(n) time | 0(d) space 
+        By recursion, I try to go through each manager reporters, if i find both reports, i assume there is another lower
+        manager. Up until i discover i can no longer find both reporters. Then i Know i was their common manager
+        
+"""
+# METHOD 1
+def getLowestCommonManager(topManager, reportOne, reportTwo):
+    if topManager == reportOne or topManager == reportTwo:
+        return topManager
+
+    ancestorTree = {
+        topManager: None,
+    }
+    buildAncestorsTree(ancestorTree, topManager)
+
+    history = set()
+    while reportOne is not None:
+        ancestor = ancestorTree[reportOne]
+        history.add(ancestor)
+        reportOne = ancestor
+
+    while reportTwo is not None:
+        ancestor = ancestorTree[reportTwo]
+        if ancestor in history:
+            return ancestor
+        reportTwo = ancestor
+
+
+def buildAncestorsTree(ancestorTree, topManager):
+    nodes = [topManager]
+    while nodes:
+        currentAncestor = nodes.pop(0)
+        for reporter in currentAncestor.directReports:
+            ancestorTree[reporter] = currentAncestor
+            nodes.append(reporter)
+
+
+# METHOD 2
+# function to get the lowest common manager given two reports and a top-level manager
+def getLowestCommonManager(topManager, reportOne, reportTwo):
+    # loop through all direct reports of the top-level manager
+    for reporter in topManager.directReports:
+        # search for the number of reporters found in this sub-tree
+        numberOfReportersFound = searchReporters(reporter, reportOne, reportTwo)
+
+        # if one of the reports is found in this sub-tree, return the current manager as the lowest common manager
+        if numberOfReportersFound == 1:
+            return topManager
+
+        # if both reports are found in this sub-tree, there may be another lower manager with both reports as direct reports
+        if numberOfReportersFound == 2:
+            # call the same function recursively for the next level down
+            return getLowestCommonManager(reporter, reportOne, reportTwo)
+
+
+# function to search for the given reports in the tree
+def searchReporters(currentManager, reportOne, reportTwo):
+    # start with the current manager
+    queue = [currentManager]
+    # keep track of how many reports are found
+    found = 0
+    while len(queue):
+        # remove the first element from the queue
+        node = queue.pop(0)
+        # add all direct reports of the current node to the queue
+        for reporter in node.directReports:
+            queue.append(reporter)
+        # check if the current node is one of the two reports we are searching for, and increment "found" if so
+        if node == reportOne:
+            found += 1
+        if node == reportTwo:
+            found += 1
+    return found
+
+
+# This is an input class. Do not edit.
+# class representing each employee and their direct reports
+class OrgChart:
+    def __init__(self, name):
+        # name of the employee
+        self.name = name
+        # list of direct reports for this employee, initialized as empty
+        self.directReports = []
