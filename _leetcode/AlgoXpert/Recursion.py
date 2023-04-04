@@ -364,3 +364,76 @@ class OrgChart:
         self.name = name
         # list of direct reports for this employee, initialized as empty
         self.directReports = []
+
+
+""" Question 8: Interweaving Strings
+    Write a func that takes three strings and returns a boolean representing whether the third string
+    can be formed by interweaving the first two strings.
+
+    To interweave a string means to merge them by alternating their letters without any specific pattern. 
+    for instance, strings "abc" and "123" can be interwoven as "a1b2c3", "abc123", "ab1c23" ... etc 
+
+    Letters in the string must maintain their relative ordering in the interwoven strings
+    
+    e.g: 
+        one='algoexpert' 
+        two='your-dream-job'
+        three='your-algodream-expertjob'       --> True 
+
+        one='aabcc' 
+        two='dbbca' 
+        three='aadbbbaccc'         --> False               
+
+    METHOD:  
+"""
+
+
+""" Question 9: Solve Sudoku
+    You're given a 2D array that represent a 9X9 partially solved Sudoku board. Write a function 
+    that returns the solved Sudoku board. 
+
+    Sudoku is a famous number-placement puzzle in which you need to fill 9x9 grid with integers 
+    in the range of 1-9. Each 9x9 Sudoku board is split into 9 3x3 subgrids, as seen below
+
+    -  -  3   -  2  -   6  -  - 
+    9  -  -   3  -  5   -  -  1 
+    -  -  1   8  -  6   4  -  - 
+   ------          -------
+    -  -  8   1  -  2   9  -  - 
+    7  -  -   -  -  -   -  -  8 
+    -  -  6   7  -  8   2  -  - 
+   ------          -------
+    -  -  2   6  -  9   5  -  - 
+    8  -  -   2  -  3   -  -  9 
+    -  -  5   -  1  -   3  -  - 
+   ------          -------
+
+   The idea is to fill the grid such that each row, column, and 3x3 subgrid contains the number 1-9
+   exactly once. In other words, no row/column may contain the same digit more than once and 
+   non of the 9 3x3 subgrid may contain the same digit more than once
+
+   Your input for this problem will always be a partially filled 9x9 2D array. 0 in the arrays represents
+   empty, valid numbers are 1-9 
+    
+    e.g: 
+                 
+
+    METHOD: 0(1) time | 0(1) space - Because we know the constant space and time 
+"""
+
+
+""" Question 10: Generate Div Tag 
+    Write a func that takes a positive integer n, and returns strings of arrays of all the possible
+    matching div tags. 
+
+    NOTE: A tag is only valid if <div></div 
+    In any order, The output should contain exactly n opening tags and n closing tags 
+    
+    e.g: numberOfTags= 2, --> [
+                            "<div><div></div</div",
+                            "<div></div<div></div",
+                            ]
+                 
+
+    METHOD: 
+"""
