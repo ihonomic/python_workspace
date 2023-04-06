@@ -477,6 +477,47 @@ def mergeOverlappingIntervals(intervals):
     return output
 
 
+""" Question 15 -  Zero sum subarray
+    Given an array of intergers, write a func that returns a boolean if there is a subarray whos 
+    sum is equal to zero (0)
+
+    e.g: [-5,-5, 2, 3, -2] --> True // [-5, 2, 3]
+    
+    Method 1 - 0(n^2) time | 0(n^2) space
+
+    Method 2 - 0(n) time | 0(n) space 
+        sums = set([0, -5, -10, -8, -5, ....])
+                    [-5,-5, 2, 3, -2] 
+        currentSum = [-5,-10, -8, -5, ...] 
+        We found -5 again, which is already in the set. This means there must be a subarray which sums up to zero
+        An index after our first -5 and the current -5 index is the subarray 
+"""
+
+
+def zeroSumSubarray(nums):
+    if 0 in nums:
+        return True
+
+    for i in range(len(nums) - 1):
+        for j in range(i + 1, len(nums)):
+            subArray = nums[i : j + 1]
+            if sum(subArray) == 0:
+                return True
+
+    return False
+
+
+def zeroSumSubarray(nums):
+    sums = set([0])
+    currentSum = 0
+    for num in nums:
+        currentSum += num
+        if currentSum in sums:
+            return True
+        sums.add(currentSum)
+    return False
+
+
 """ Question : 3 Sum
     Return all combination of numbers from the array that equals to targetSum
 

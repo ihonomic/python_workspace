@@ -41,7 +41,6 @@ class SuffixTrie:
     def populateSuffixTrieFrom(self, string):
         for i in range(len(string)):
             self.insertSubstringStartingAt(i, string)
-     
 
     def insertSubstringStartingAt(self, i, string):
         node = self.root
@@ -49,17 +48,16 @@ class SuffixTrie:
             letter = string[j]
             if letter not in node:
                 node[letter] = {}
-            node = node[letter]
+            node = node[letter]  # shift to next node
         node[self.endSymbol] = True
-            
 
     # 0(n) time | 0(1) space
     def contains(self, string):
         node = self.root
         for letter in string:
             if letter not in node:
-                return False 
-            node = node[letter]
+                return False
+            node = node[letter]  # shift to next node
         return self.endSymbol in node
 
 
@@ -77,7 +75,7 @@ class SuffixTrie:
 
   METHOD 1: 
 """
+
+
 def multiStringSearch(bigString, smallStrings):
     return [True if bigString.find(string) != -1 else False for string in smallStrings]
-
-    

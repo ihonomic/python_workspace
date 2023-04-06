@@ -661,6 +661,53 @@ def semordnilap(words):
     return result
 
 
+""" Question 17 - One Edit 
+    Given 2 strings, stringOne & stringTwo. Write a func that determines if these two strings can 
+    be made equal with ONLY one edit
+
+    There are 3 possible edits:
+    - Replace: Swapping a character for another character
+    - Add: Add a new character
+    - Remove: Remove a character
+
+    e.g : stringOne = Hello, stringTwo = Hollo --> True // we can replace
+        : stringOne = Hell, stringTwo = Hello --> True // we can add 
+        : stringOne = "Ihono, stringTwo = Jhon --> False 
+
+
+    METHOD: 
+        NOTE: For replace, two strings have to be on the same length, 
+              For add & remove, two strings have to be of different length
+        
+              - Remain at the current index and compare the right half with the longer string right half
+
+"""
+
+
+def oneEdit(stringOne, stringTwo):
+    lengthOne, lengthTwo = len(stringOne), len(stringTwo)
+
+    # We can't make one edit if there is a difference in length, that is greater than 1
+    if abs(lengthOne - lengthTwo) > 1:
+        return False
+
+    # Consider the shortest string
+    # if two-different character is found, compare the right halves of both
+    for i in range(min(lengthOne, lengthTwo)):
+        if stringOne[i] != stringTwo[i]:
+            # stringOne is longer than stringTwo
+            if lengthOne > lengthTwo:
+                return stringOne[i + 1 :] == stringTwo[i:]
+            # stringOne is shorter than stringTwo
+            elif lengthTwo > lengthOne:
+                return stringOne[i:] == stringTwo[i + 1 :]
+            # same length
+            else:
+                return stringOne[i + 1 :] == stringTwo[i + 1 :]
+
+    return True
+
+
 if __name__ == "__main__":
     print(longestSubstringWithoutDuplication("clementisacap"))
     ...
