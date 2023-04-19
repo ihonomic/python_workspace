@@ -1,0 +1,11 @@
+MF: C15H3AlF18O6
+CF: Al(CF3COCHCOCF3)3
+IUPAC Name: ALUMINUM HEXAFLUOROACETYLACETONATE
+Isomeric SMILES: C(=C(\O[Al](O/C(=C\C(=O)C(F)(F)F)/C(F)(F)F)O/C(=C\C(=O)C(F)(F)F)/C(F)(F)F)/C(F)(F)F)\C(=O)C(F)(F)F
+InChI: InChI=1S/3C5H2F6O2.Al/c3*6-4(7,8)2(12)1-3(13)5(9,10)11;/h3*1,12H;/q;;;+3/p-3/b3*2-1-;
+Core level: Al 2p3/2
+BE: 81.61
+Reference ID: 1
+Reference DOI: 10.1080/00958977608073003
+Reference text: 
+Comment: something is here
