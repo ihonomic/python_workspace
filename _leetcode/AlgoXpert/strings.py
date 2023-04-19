@@ -708,6 +708,25 @@ def oneEdit(stringOne, stringTwo):
     return True
 
 
+""" Question 18 - Common Characters
+    Write a func that takes in a lists of strings and return a list of characters that are common to all 
+    strings in the list, ignoring duplicates, return in any order. 
+
+    e.g: strings=['abc', 'bcd', 'cbad'] --> ['b', 'c']
+
+    METHOD: 
+       Compare others with the first. 
+"""
+
+
+def commonCharacters(strings):
+    result = set(strings[0])
+    for idx in range(1, len(strings)):
+        result = result & set(strings[idx])
+
+    return list(result)
+
+
 if __name__ == "__main__":
     print(longestSubstringWithoutDuplication("clementisacap"))
     ...
