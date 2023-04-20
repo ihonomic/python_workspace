@@ -275,3 +275,46 @@ def bestDigits(number, numDigits):
                 break
 
     return "".join(stack[: len(number) - numDigits])
+
+
+""" Question  - Reverse Polish Notation
+    Given a list of strings 'tokens' representing mathematical expression using reverse polish notation. 
+    Reverse polish notation is a notation where operators come after operands, instead of between them. 
+    2, 4, + --> 6 . 
+    An expression is evaluate from left to right. All the operators for this problem takes 2 operands, 
+    which will always be the two values immediately preceding the operator. 
+
+    Your function should support 4 types of operands "*", "/", "-" and "+". 
+    NOTE: / division should be a floor division, rounding towards zero. 3/2 = 1
+    e.g:  18 4 - 7 /   --> ((18-4) /7 ) --> 2 
+        tokens=['50', '3', '17', '+', '2', '-', '/'] --> (50 / ((3 + 17) -2 ))) --> 2 
+
+    METHOD 1: 
+        Using a stack, if an operand is found, pop out and compute the last 2 digits with the current 
+        operand. 
+"""
+
+
+def reversePolishNotation(tokens):
+    stack = []
+    for token in tokens:
+        try:
+            stack.append(int(token))
+        except:
+            # We found an operand
+            # get the last 2 digits in the stack and apply the operrand
+            second = stack.pop()
+            first = stack.pop()
+
+            if token == "+":
+                computed = first + second
+            elif token == "-":
+                computed = first - second
+            elif token == "*":
+                computed = first * second
+            elif token == "/":
+                computed = int(first / second)
+
+            stack.append(computed)
+
+    return stack[0]
