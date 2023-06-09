@@ -83,7 +83,6 @@ def tournamentWinner(competitions, results):
     hashMap = {bestTeam: 0}
 
     for match, result in zip(competitions, results):
-
         result = 0 if result == 1 else 1  # swap the result index
 
         team = match[result]
@@ -113,7 +112,6 @@ def tournamentWinner(competitions, results):
 
 
 def nonConstructibleChange(coins):
-
     coins.sort()
 
     currentChangeCreated = 0
@@ -457,7 +455,6 @@ def firstDuplicateValue(array):
 
 
 def mergeOverlappingIntervals(intervals):
-
     intervals.sort(key=lambda x: x[0])
     output = []
     idx = 0
@@ -558,13 +555,11 @@ def threeNumberSum(array, targetSum):
 
 
 def fourNumberSum(array, targetSum):
-
     output = []
     array.sort()
 
     for i in range(len(array) - 3):
         for j in range(i + 1, len(array) - 2):
-
             l, r = j + 1, len(array) - 1
 
             while l < r:
@@ -599,7 +594,6 @@ def fourNumberSum(array, targetSum):
 
 
 def subarraySort(array):
-
     minOutOfOrder = float("inf")
     maxOutOfOrder = float("-inf")
 
@@ -663,3 +657,52 @@ def transposeMatrix(matrix):
 
         result.append(newRow)
     return result 
+
+""" Question 18 - Best Seat
+    You walk into a movie theater and you'll like to seat in a row that gives you the most space, you'll prefer this
+    space to be evenly distributed on both sides (e.g if there are 3 empty seats, you'll like to seat in the second seat)
+
+    Given an array representing the theater row, return the seat index of where you should seat. 
+    NOTE: 1's represents occupied seats, 0's represents empty seats
+
+    Assume that someone is always seating into the first & last seat, and whenever there are two equally good seat, 
+    you should seat in the smallest index 
+
+    if there is no seat, return -1 
+
+    e.g: array=[1, 0, 1, 0, 0, 0, 1]  -->  4 
+        seats=[1, 0, 0, 1] --> 1 
+        seats=[1, 0, 0, 1, 0, 0, 1] --> 1
+        seats=[1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1] --> 3
+    
+    Method 1: 
+    Identify the longest contineous subarray of zeros
+    - find the longest 0's subarray 
+    - Save the start and end indexes of the longest 0's subarray
+    - return the average. i.e the middle of both indexes
+"""
+
+
+def bestSeat(seats):
+    if 0 not in seats:
+        return -1
+
+    longest = float("-inf")
+    indexes = []
+    startIdx = 1
+
+    while startIdx < len(seats):
+        # Found start index
+        if seats[startIdx] == 0:
+            endIdx = startIdx
+            # Find the end index of contineous 0's
+            while endIdx < len(seats) and seats[endIdx] == 0:
+                endIdx += 1
+            length = endIdx - startIdx
+            if length > longest:
+                indexes = [startIdx, endIdx - 1]
+                longest = endIdx - startIdx
+
+        startIdx += 1
+
+    return sum(indexes) // 2

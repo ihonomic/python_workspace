@@ -46,7 +46,11 @@ class MinMaxStack:
 
 
 def balancedBrackets(string):
-    d = {")": "(", "]": "[", "}": "{", }
+    d = {
+        ")": "(",
+        "]": "[",
+        "}": "{",
+    }
     stack = []
     for s in string:
         if s in ["(", "{", "["]:
@@ -136,7 +140,7 @@ def nextGreaterElement(array):
     res = [-1] if len(array) == 1 else []
 
     for idx, num in enumerate(array):
-        rotatedArray = array[idx + 1:] + array[:idx]
+        rotatedArray = array[idx + 1 :] + array[:idx]
 
         for i, n in enumerate(rotatedArray):
             if n > num:
@@ -241,3 +245,76 @@ def largestRectangleUnderSkyline(buildings):
             right += 1
         maxRectangle = max(maxRectangle, countBuildings * currentHeight)
     return maxRectangle
+
+
+""" Question  - Best Digits
+    Write a func that takes in a positive string interger (number) and an interger (numDigits). 
+    Remove numDigits'th from the string such that the left over string is large as possible. 
+
+    e.g:  number='129847563' numDigits=4 --> 98763
+    number='19' numDigits=1 --> 9
+    number='22' numDigits=1 --> 2
+    number='23' numDigits=1 --> 3
+    number='123' numDigits=1 --> 23
+    number='321' numDigits=1 --> 32
+    number='10000000002' numDigits=9 --> 2
+
+    METHOD 1: 
+        remove previous number that are less than current number
+"""
+
+
+def bestDigits(number, numDigits):
+    # Build a stack
+    stack = [n for n in number]
+    for _ in range(numDigits):
+        # remove previous number that are less than current number
+        for i in range(1, len(stack)):
+            if stack[i - 1] < stack[i]:
+                stack.pop(i - 1)
+                break
+
+    return "".join(stack[: len(number) - numDigits])
+
+
+""" Question  - Reverse Polish Notation
+    Given a list of strings 'tokens' representing mathematical expression using reverse polish notation. 
+    Reverse polish notation is a notation where operators come after operands, instead of between them. 
+    2, 4, + --> 6 . 
+    An expression is evaluate from left to right. All the operators for this problem takes 2 operands, 
+    which will always be the two values immediately preceding the operator. 
+
+    Your function should support 4 types of operands "*", "/", "-" and "+". 
+    NOTE: / division should be a floor division, rounding towards zero. 3/2 = 1
+    e.g:  18 4 - 7 /   --> ((18-4) /7 ) --> 2 
+        tokens=['50', '3', '17', '+', '2', '-', '/'] --> (50 / ((3 + 17) -2 ))) --> 2 
+
+    METHOD 1: 
+        Using a stack, if an operand is found, pop out and compute the last 2 digits with the current 
+        operand. 
+"""
+
+
+def reversePolishNotation(tokens):
+    stack = []
+    for token in tokens:
+        try:
+            stack.append(int(token))
+        except:
+            # We found an operand
+            # get the last 2 digits in the stack and apply the operrand
+            second = stack.pop()
+            first = stack.pop()
+
+            if token == "+":
+                computed = first + second
+            elif token == "-":
+                computed = first - second
+            elif token == "*":
+                computed = first * second
+            elif token == "/":
+                computed = int(first / second)
+
+            stack.append(computed)
+
+    return stack[0]

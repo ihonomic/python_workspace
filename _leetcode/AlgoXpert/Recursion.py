@@ -382,10 +382,78 @@ class OrgChart:
 
         one='aabcc' 
         two='dbbca' 
-        three='aadbbbaccc'         --> False               
+        three='aadbbbaccc'         --> False    
 
-    METHOD:  
+        one='aaa' 
+        two='aaaf' 
+        three='aaafaaa'         --> True               
+
+    METHOD 1: O(2^(n+m)) time | 0(n+m) space
+    METHOD 2: O(nm) time | 0(nm) space
 """
+
+# METHOD 1
+def interweavingStrings(one, two, three):
+    """
+    Recursion come into play if one of the letter is what we need
+    """
+    # For it to be interwoven, it has to be the sum of both strings length
+    if len(three) != len(one) + len(two):
+        return False
+
+    return areInterwoven(one, two, three, 0, 0)
+
+
+def areInterwoven(one, two, three, i, j):
+    # We can know where the third pointer is & if we've reached the end, return True
+    k = i + j
+    if k == len(three):
+        return True
+
+    # If the char of pointer 1 matches char of pointer 3, we advance pointer 1
+    if i < len(one) and one[i] == three[k]:
+        if areInterwoven(one, two, three, i + 1, j):
+            return True
+
+    # if pointer 1 is finalized or doesn't match pointer 3, we start exploring pointer 2
+    if j < len(two) and two[j] == three[k]:
+        return areInterwoven(one, two, three, i, j + 1)
+
+    return False
+
+
+# METHOD 2
+def interweavingStrings(one, two, three):
+
+    # For it to be interwoven, it has to be the sum of both strings length
+    if len(three) != len(one) + len(two):
+        return False
+    cache = [[None for j in range(len(two) + 1)] for i in range(len(one) + 1)]
+    return areInterwoven(one, two, three, 0, 0, cache)
+
+
+def areInterwoven(one, two, three, i, j, cache):
+    if cache[i][j] is not None:
+        return cache[i][j]
+
+    # We can know where the third pointer is & if we've reached the end, return True
+    k = i + j
+    if k == len(three):
+        return True
+
+    # If the char of pointer 1 matches char of pointer 3, we advance pointer 1
+    if i < len(one) and one[i] == three[k]:
+        cache[i][j] = areInterwoven(one, two, three, i + 1, j, cache)
+        if cache[i][j]:
+            return True
+
+    # if pointer 1 is finalized or doesn't match pointer 3, we start exploring pointer 2
+    if j < len(two) and two[j] == three[k]:
+        cache[i][j] = areInterwoven(one, two, three, i, j + 1, cache)
+        return cache[i][j]
+
+    cache[i][j] = False
+    return False
 
 
 """ Question 9: Solve Sudoku
@@ -415,11 +483,97 @@ class OrgChart:
    Your input for this problem will always be a partially filled 9x9 2D array. 0 in the arrays represents
    empty, valid numbers are 1-9 
     
-    e.g: 
+    e.g: board=[
+        [7, 8, 0, 4, 0, 0, 1, 2, 0], 
+        [6, 0, 0, 0, 7, 5, 0, 0, 9], 
+        [0, 0, 0, 6, 0, 1, 0, 7, 8], 
+        [0, 0, 7, 0, 4, 0, 2, 6, 0], 
+        [0, 0, 1, 0, 5, 0, 9, 3, 0], 
+        [9, 0, 4, 0, 6, 0, 0, 0, 5], 
+        [0, 7, 0, 3, 0, 0, 0, 1, 2], 
+        [1, 2, 0, 0, 0, 7, 4, 0, 0], 
+        [0, 4, 9, 2, 0, 6, 0, 0, 7]
+    ] --> 
+    result=[
+        [7, 8, 5, 4, 3, 9, 1, 2, 6], 
+        [6, 1, 2, 8, 7, 5, 3, 4, 9], 
+        [4, 9, 3, 6, 2, 1, 5, 7, 8], 
+        [8, 5, 7, 9, 4, 3, 2, 6, 1], 
+        [2, 6, 1, 7, 5, 8, 9, 3, 4], 
+        [9, 3, 4, 1, 6, 2, 7, 8, 5], 
+        [5, 7, 8, 3, 9, 4, 6, 1, 2], 
+        [1, 2, 6, 5, 8, 7, 4, 9, 3], 
+        [3, 4, 9, 2, 1, 6, 8, 5, 7]
+    ]
                  
 
     METHOD: 0(1) time | 0(1) space - Because we know the constant space and time 
+        - We're going to place a number (1-9) in a box, and make sure the number is not repeated in the 
+        3x3 grid, row and the column
+        - If we get to a point where 1-9 doesnt fit in a box, that means we've made a mistake previously, we need to
+        backtrack. By backtracking, its just go back and try other possible numbers for others.
 """
+
+
+def solveSudoku(board):
+    solvePartialSudoku(0, 0, board)
+    return board
+
+
+def solvePartialSudoku(row, col, board):
+    """Place the digit at this position, or backtrack when it can't place a digit"""
+    currentRow = row
+    currentCol = col
+
+    # when col == 9, we've reached the end of a col,  move down to next row
+    if currentCol == len(board[row]):
+        currentRow += 1
+        currentCol = 0
+        if currentRow == len(board):
+            return True  # We're finished... Hurray!
+
+    if board[currentRow][currentCol] == 0:
+        return tryDigitsAtPosition(currentRow, currentCol, board)
+
+    # Move to the next position, either forward or downwards
+    return solvePartialSudoku(currentRow, currentCol + 1, board)
+
+
+def tryDigitsAtPosition(row, col, board):
+    for digit in range(1, 10):
+        if isValidAtPosition(digit, row, col, board):
+            board[row][col] = digit
+            # Now check if by placing the digit, if it perfect for others
+            if solvePartialSudoku(row, col + 1, board):
+                return True
+
+    # if the rest of the partial soduku wasn't solved. Reset the current position
+    board[row][col] = 0
+    return False
+
+
+def isValidAtPosition(value, row, col, board):
+    """To know if a value is valid in the box"""
+    # check the row & column
+    rowIsValid = value not in board[row]
+    colIsValid = value not in map(lambda r: r[col], board)
+
+    if not rowIsValid or not colIsValid:
+        return False
+
+    # check the subgrid 3x3 (Remember there are only 9 subgrids)
+    subgridRowStart = row // 3
+    subgridColStart = col // 3
+    for rowIdx in range(3):
+        for colIdx in range(3):
+            rowToCheck = subgridRowStart * 3 + rowIdx
+            colToCheck = subgridColStart * 3 + colIdx
+            exisitingValue = board[rowToCheck][colToCheck]
+
+            if exisitingValue == value:
+                return False
+
+    return True
 
 
 """ Question 10: Generate Div Tag 
@@ -433,6 +587,31 @@ class OrgChart:
                             "<div><div></div</div",
                             "<div></div<div></div",
                             ]
+                 
+
+    METHOD: 
+"""
+
+""" Question 11: Ambiguous Measurements 
+    This problems deals with measuring cups and some where not labelled. A measuring cup has 2 measuring lines:
+    A low (L) line & a high (H) line. This means that the cups guaranted that the substance poured in them will be 
+    within 'low' and 'high'
+
+    Given a list of cups, a low integer & a high integer which represent a range of target measurement. 
+    Write a func that returns a boolean weather you can accurately use the cups to measure a volume in the specified
+    [low, high] range (range is inclusive)
+
+    Note that:
+    - Each cups is a pair of positive integers [L, H]
+    - There will always be one measuring cups 
+    - Once you've measured some liquid it will immediately be transferred to a larger bowl that will eventually (possibly)
+    contain the target measurement. 
+    - You can't pour the content of 1 measuring cup to another measuring cup 
+    e.g: measuringCups=[
+        [200, 210], [450, 465], [800, 850]
+        ] 
+        low=2100
+        high=2300 --> 
                  
 
     METHOD: 

@@ -163,7 +163,6 @@ def findSuccessor(tree, node):
 
     # find the next node after the given node. (successor)
     for idx in range(len(inOrderArray)):
-
         if inOrderArray[idx] == node:
             # if the node is found but its at the last, return None
             if idx == len(inOrderArray) - 1:
@@ -301,7 +300,11 @@ def breathFirstSearchForNodesDistanceK(targetNode, nodesToParents, k):
             return nodesDistanceK
 
         # Take all the neigboring nodes and add to queue, if they've not been on queue before
-        connectedNodes = [currentNode.left, currentNode.right, nodesToParents[currentNode.value]]
+        connectedNodes = [
+            currentNode.left,
+            currentNode.right,
+            nodesToParents[currentNode.value],
+        ]
         for node in connectedNodes:
             if node is None:
                 continue
@@ -358,7 +361,9 @@ def iterativeInOrderTraversal(tree, callback):
                 nextNode = currentNode.left
             else:
                 callback(currentNode)
-                nextNode = currentNode.right if currentNode.right else currentNode.parent
+                nextNode = (
+                    currentNode.right if currentNode.right else currentNode.parent
+                )
         elif previousNode == currentNode.left:
             # we've gone backup, previous node is now at downwards left
             callback(currentNode)
@@ -431,10 +436,12 @@ class Node:
         self.down = down
 
 
-chain = Node(1, Node(2, Node(3,
-                             Node(8, Node(10), Node(9)),
-                             Node(4, Node(5, Node(6, down=Node(7))))
-                             )))
+chain = Node(
+    1,
+    Node(
+        2, Node(3, Node(8, Node(10), Node(9)), Node(4, Node(5, Node(6, down=Node(7)))))
+    ),
+)
 
 
 def flatten_chain(chain):
@@ -789,3 +796,109 @@ def getTreeSum(tree):
     if tree is None:
         return 0 
     return tree.value + getTreeSum(tree.left) + getTreeSum(tree.right)
+
+""" Question 17: Evaluate Expression Tree 
+    Write a function to evaluate a tree mathematically, resulting in a single interger. 
+    All leaf nodes in the tree represents operands which will always be positive numbers, 
+    but other nodes represent operators. 
+    There are 4 operators supported, each of which is represented by a negative integer. 
+     -1 : Addition operator, adding the left & the right subtrees
+     -2 : Subtract operator, subtracting the right subtree from the left substree
+     -3: Divide operator, dividing the left subtree by the right subtree. round to towards if decimal. 
+     -4 : Multiply operator, multiply the left subtree by the right subtree
+
+    You can assume the tree will always be a valid expression tree. Each operator
+    also works as a grouping symbol, meaning the bottom of the tree is always evaluated 
+    first, regardless of the operator
+    e.g: 
+    tree =      -1
+               /   \
+             -2    -3
+             / \   / \
+           -4   2 8   3
+           / \
+          2   3      
+
+
+                              --> 6 (((2 * 3) - 2) + (8 / 3))
+    Method: 0(n) time | 0(h) space
+    Recursively drilling down to the leaf node 
+    Perform the operand and operator calculations and return to previous 
+"""
+
+
+# This is an input class. Do not edit.
+class BinaryTree:
+    def __init__(self, value, left=None, right=None):
+        self.value = value
+        self.left = left
+        self.right = right
+
+
+def evaluateExpressionTree(tree):
+    # If we're at leaf node
+    if tree.value >= 0:
+        return tree.value
+
+    leftValue = evaluateExpressionTree(tree.left)
+    rightValue = evaluateExpressionTree(tree.right)
+
+    if tree.value == -1:
+        return leftValue + rightValue
+    if tree.value == -2:
+        return leftValue - rightValue
+    if tree.value == -3:
+        return int(leftValue / rightValue)
+    if tree.value == -4:
+        return leftValue * rightValue
+
+
+""" Question 18: Binary Tree Diameter
+    Write a function that takes in a binary tree and return it's diameter. The diameter is the
+    length of its longest path, even if the path doesnt pass through the root of the tree. 
+
+    A path is a collection of connected nodes in the tree, where no node is connected to more 
+    than two other nodes. The length of a path is the number of edges betw the paths first node 
+    and its last node. 
+    e.g: 
+    tree =       1
+               /  \
+              3    2
+            /  \  
+           7    4
+         /       \
+        8         5
+      /            \
+     9              6
+
+
+     --> 6 // 9 -> 8 -> 7 -> 3 -> 4 -> 5 -> 6 
+    Method: 
+        Go down to the leaf node and calculate the depth upwards, add the depths from 
+        both right and left to determine the current depth (path)
+
+        In the example above, leaf nodes 9 & 6 have depths of 3 each, adding both equals 6
+"""
+
+
+def binaryTreeDiameter(tree):
+    longestPath = [0]  # recurse down values for a possible change
+    calculateLongestPath(tree, longestPath)
+    return longestPath[0]
+
+
+def calculateLongestPath(root, longestPath):
+    # The idea is that we're looking for the longest path while using
+    # recursion to find the longest depth of the left subtree and of the
+    # right subtree
+
+    if root is None:
+        return 0
+
+    leftDepth = calculateLongestPath(root.left, longestPath)
+    rightDepth = calculateLongestPath(root.right, longestPath)
+
+    currentLongestPath = leftDepth + rightDepth
+    longestPath[0] = max(longestPath[0], currentLongestPath)
+
+    return max(leftDepth, rightDepth) + 1
