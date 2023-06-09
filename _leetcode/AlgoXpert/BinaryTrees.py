@@ -618,3 +618,174 @@ def getLeavesNodes(node, array):
         getLeavesNodes(node.right, array)
 
     return array
+
+
+""" Question 14: Symmetrical Tree 
+    Write a function that takes a binary Tree, and returns True if the tree is symmetrical. A tree is symmetrical 
+    if the left and right subtrees are mirror images of each other 
+    e.g: 
+    tree =        1
+               /    \
+              2      2
+             / \    / \
+            3   4  4   3
+           / \        / \
+          5  6       6   5        
+                            --> True 
+    Method 1: 0(n) time | 0(h) space
+        - 
+    Method 2: 0(n) time | 0(h) space
+        - 
+"""
+# Method 1 
+def symmetricalTree(tree):
+    return isMirrored(tree.left, tree.right)
+
+
+def isMirrored(left, right):
+    if left is not None and right is not None and left.value == right.value:
+        return isMirrored(left.left, right.right) and isMirrored(left.right, right.left)
+
+    return left == right 
+
+# Method 2 
+def symmetricalTree(tree):
+    queueLeft = [tree.left]
+    queueRight = [tree.right]
+
+    while len(queueLeft) > 0:
+        left = queueLeft.pop()
+        right = queueRight.pop()
+
+        if left is None and right is None:
+            continue 
+
+        if left is None or right is None or left.value != right.value:
+            return False 
+
+        queueLeft.append(left.left)
+        queueLeft.append(left.right)
+        
+        queueRight.append(right.right)
+        queueRight.append(right.left)
+
+    return True 
+        
+""" Question 15: Merge Binary Tree 
+   Given 2 Binary Tree, merge them and return the resulting tree. If two nodes overlap during the merger
+   then sum the values, otherwise use the exiting node 
+
+   Note: Your solution can either mutate the exiting tree or return a new tree 
+    e.g: 
+    tree1 =      1
+               /  \
+              3    2
+             / \    
+            7   4  
+
+    tree2 =       1
+               /    \
+              5      9
+             /      / \
+            2      7   6
+      
+                            ----> 
+
+                 2
+               /  \
+              8    11
+             / \   / \ 
+            9   4 7   6
+
+    Method 1: 0(n) time | 0(h) space   - 
+    - Add node Two value to node One, if nodeOne becomes empty, link nodeTwo subtree to it. 
+    - Keep track of the next left and right in a queue/OR stack
+"""
+
+def mergeBinaryTrees(tree1, tree2):
+    if tree1 is None:
+        return tree2 
+        
+    queueOne = [tree1]
+    queueTwo = [tree2]
+
+    while len(queueOne) > 0:
+        nodeOne =  queueOne.pop() 
+        nodeTwo =  queueTwo.pop() 
+
+        if nodeTwo is None:
+            continue 
+
+        nodeOne.value += nodeTwo.value 
+
+        if nodeOne.left is None:
+            nodeOne.left = nodeTwo.left 
+        else:
+            queueOne.append(nodeOne.left)
+            queueTwo.append(nodeTwo.left)
+            
+        if nodeOne.right is None:
+            nodeOne.right = nodeTwo.right 
+        else:
+            queueOne.append(nodeOne.right)
+            queueTwo.append(nodeTwo.right)
+
+    return tree1 
+        
+        
+        
+""" Question 16: Split Binary Tree 
+   Write a func that takes a binary Tree, with at least one node and check if that tree can be split into two
+   binary Tree of equal sum by removing a single edge. If this split is possible, return the new sum of each binary Tree, 
+   otherwise return 0. NOTE: You dont need to return the edge that was removed. 
+
+   The sum of a binary tree is the sum of all values in that binary Tree. 
+    e.g: 
+    tree =       1
+               /   \
+              3    -2
+             / \   / \
+            6  -5 5   2
+           /
+          2  
+                            ----> 6 // Remove the edge to the left, that links 3 & 1, both splitted tree has sum of 6. 
+
+
+    Method 1: 0(n) time | 0(h) space   - 
+    - The idea is to find the desired sum that makes both trees equal when we split
+     First we find the total sum of the root tree, half of it is our desired sum, 
+
+    - Next, We need to go through every node to check if we find this desired sum downwards
+     while neglecting the parent sum 
+     NOTE: if we dont find the desired sum, return 0 
+
+     Starting from the bottom 
+     sum(currentNode) = currentNode.value + sum(currentNode.left.value) + sum(currentNode.right.value)
+"""
+
+def splitBinaryTree(tree):
+    desiredSum = getTreeSum(tree) / 2
+
+    # Drill downwards to the leaf nodes and check if the currentNode and the sum of its children equals desired sum, 
+    # if yes, return (desiredSum, True)
+    canBeSplit = trySubTrees(tree, desiredSum)[1]
+
+    # If can be split is True, return our calculated desired sum
+    return desiredSum if canBeSplit else 0
+
+
+def trySubTrees(tree, desiredSum):
+    if tree is None:
+        return (0, False)  # (currentSum, Can be split at leaf?)
+
+    leftSum, leftCanBeSplit = trySubTrees(tree.left, desiredSum)
+    rightSum, rightCanBeSplit = trySubTrees(tree.right, desiredSum)
+
+    currentSum = tree.value + leftSum + rightSum 
+    canBeSplit = leftCanBeSplit or rightCanBeSplit or currentSum == desiredSum
+    return (currentSum, canBeSplit)
+
+def getTreeSum(tree):
+    if tree is None:
+        return 0 
+    return tree.value + getTreeSum(tree.left) + getTreeSum(tree.right)

@@ -6,4 +6,4 @@ from this directory to start the local server.
 
 Then open "http://localhost:8000/index.html" in the browser.
 
-Also, this can be accessed using the local IP address from other computers in the same netowrk.
+Also, this can be accessed using the local IP address from other computers in the same network.
