@@ -633,3 +633,33 @@ def isOutOfOrder(i, num, array):
     if i == len(array) - 1:
         return num < array[i - 1]
     return array[i - 1] > num or num > array[i + 1]
+
+""" Question 17 - Transpose Matrix
+    Given a 2D array of intergers matrix. Write a func that returns the transpose of the matrix. 
+    NOTE: Transpose of a matrix, the rows becoming columns and vice versa. 
+
+    e.g : [
+    [1, 2],
+    [3, 4],
+    [5, 6],]
+    -->
+      [
+    [1, 3, 5],
+    [2, 4, 6],
+    ]
+    
+    Method : 0(n * h) time | 0(n * h) space
+        We need to go inside the column for every row and 
+        add to a new array which will later be added to our result
+"""
+
+def transposeMatrix(matrix):
+
+    result = []
+    for col in range(len(matrix[0])):
+        newRow = []
+        for row in range(len(matrix)):
+            newRow.append(matrix[row][col])
+
+        result.append(newRow)
+    return result 
